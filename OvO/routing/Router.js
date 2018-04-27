@@ -1,11 +1,20 @@
 import Route from './Route.js';
+import Link from './Link.js';
+import History from './History.js';
+import State from './State.js';
 import View from '../view/View.js';
+
+const HISTORY= Symbol( 'history', );
+const ROUTES= Symbol( 'routes', );
+const WINDOW= Symbol( 'window', );
+const DISPATCH= Symbol( 'dispatch', );
 
 export default class Router
 {
 	constructor()
 	{
-		this.routes= new Map;
+		this[HISTORY]= new History;
+		this[ROUTES]= new Map;
 	}
 	
 	/**
@@ -13,7 +22,7 @@ export default class Router
 	 */
 	route( name, pattern, page, )
 	{
-		this.routes.set( name, new Route( pattern, page, ), );
+		this[ROUTES].set( name, new Route( this, pattern, page, ), );
 	}
 	
 	/**
@@ -29,22 +38,62 @@ export default class Router
 	 */
 	listen( window, )
 	{
+		this[WINDOW]= window;
+		
 		window.addEventListener( 'popstate', e=>{
-			console.log( e.state, );
-			this._dispatch( window.location.pathname, );
+			this[HISTORY].moveTo( e.state );
+			this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
 		}, );
 		
-		this._dispatch( window.location.pathname, );
+		const route= this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
+		
+		this[HISTORY].push(
+			new State(
+				new Link( route, window.location.href, ),
+			),
+		);
 	}
 	
 	/**
-	 * Dispatch with path.
+	 * Build a link to route.
+	 */
+	linkTo( routeName, params, )
+	{
+		const route= this[ROUTES].get( routeName, )
+		
+		if(!( route ))
+			throw `Route ${routeName} is not defiend.`;
+		
+		return route.link( params );
+	}
+	
+	/**
+	 * 
+	 */
+	goto( link, )
+	{
+		const state= new State( link, );
+		
+		this.history.push( state, );
+		
+		this[WINDOW].history.pushState( state, '', link.url, );
+		
+		this[DISPATCH]( link.url, '', '', );
+	}
+	
+	get history()
+	{
+		return this[HISTORY];
+	}
+	
+	/**
+	 * Dispatch with url.
 	 * 
 	 * @private
 	 */
-	_dispatch( path )
+	[DISPATCH]( path, query, anchor, )
 	{
-		for( let [ name, route, ] of this.routes )
+		for( let [ name, route, ] of this[ROUTES] )
 		{
 			let matches= route.match( path, );
 			
@@ -54,10 +103,17 @@ export default class Router
 				this.view.loading();
 				
 				// Render the PAGE and update the VIEW (async)
-				return import(route.page+'.js').then( page=> this.view.update( page.default.render( matches, ), ), );
+				import(route.page+'.js').then(
+					page=> this.view.update(
+						page.default.render( matches, query, anchor, ),
+					),
+				);
+				
+				return route;
 			}
 		}
 		
 		// 404
 	}
 }
+

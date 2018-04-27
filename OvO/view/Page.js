@@ -1,3 +1,5 @@
+import Query from '../support/Query.js';
+
 export default class Page
 {
 	constructor( { name, render, template, }, )
@@ -7,9 +9,12 @@ export default class Page
 		this.template= template;
 	}
 	
-	render( params, )
+	render( params, query, anchor, )
 	{
+		query= Query.parse( query, );
+		
 		// TODO
-		return this.template;
+		// return this.template;
+		return this.renderMethod();
 	}
 }
