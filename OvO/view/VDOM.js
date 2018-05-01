@@ -7,6 +7,7 @@ const CHILDREN= Symbol( 'children', );
 const ATTRIBUTES= Symbol( 'attributes', );
 const LISTENERS= Symbol( 'listeners', );
 const APPEND_LISTENER= Symbol( 'append_listener', );
+const EMPTY= Symbol( 'empty', );
 
 export default class VDOM
 {
@@ -17,6 +18,7 @@ export default class VDOM
 		this[CHILDREN]= [];
 		this[ATTRIBUTES]= new Map;
 		this[LISTENERS]= [];
+		this[EMPTY]= false;
 	}
 	
 	appendChild( child, )
@@ -59,7 +61,7 @@ export default class VDOM
 		for( let [ attr, value, ] of this[ATTRIBUTES] )
 			str+= ` ${attr}="${value}"`;
 		
-		if( this.isEmpty() )
+		if( this.isEmpty )
 			str+= ' />';
 		else
 		{
@@ -91,9 +93,16 @@ export default class VDOM
 		return dom;
 	}
 	
-	isEmpty()
+	empty()
 	{
-		return false;
+		this[EMPTY]= true;
+		
+		return this;
+	}
+	
+	get isEmpty()
+	{
+		return this[EMPTY];
 	}
 }
 

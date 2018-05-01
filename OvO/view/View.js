@@ -14,7 +14,8 @@ export default class View
 		// update( diffrence, )
 		
 		this.container.innerHTML= '';
-		this.container.appendChild( vdom.toDOM( document ), );
+		this.container.appendChild( vdom.toDOM( document, ), );
+		// this.container.innerHTML= vdom;
 	}
 	
 	loading()

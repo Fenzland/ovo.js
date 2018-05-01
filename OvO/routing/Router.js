@@ -18,15 +18,23 @@ export default class Router
 	}
 	
 	/**
-	 * Route a pattern to a PAGE.
+	 * Route a path pattern to a PAGE.
+	 * 
+	 * @param String name
+	 * @param String pattern
+	 * @param String page
 	 */
 	route( name, pattern, page, )
 	{
-		this[ROUTES].set( name, new Route( this, pattern, page, ), );
+		this[ROUTES].set( name, new Route( pattern, page, ), );
 	}
 	
 	/**
 	 * Set a DOM as route container. and create a VIEW.
+	 * 
+	 * @param Element container
+	 * 
+	 * @return viod
 	 */
 	showIn( container, )
 	{
@@ -34,7 +42,11 @@ export default class Router
 	}
 	
 	/**
-	 * Listen to window.
+	 * Listen to the BOM window.
+	 * 
+	 * @param Window window
+	 * 
+	 * @return viod
 	 */
 	listen( window, )
 	{
@@ -56,6 +68,11 @@ export default class Router
 	
 	/**
 	 * Build a link to route.
+	 * 
+	 * @param String routeName
+	 * @param Object params
+	 * 
+	 * @return Link
 	 */
 	linkTo( routeName, params, )
 	{
@@ -64,11 +81,15 @@ export default class Router
 		if(!( route ))
 			throw `Route ${routeName} is not defiend.`;
 		
-		return route.link( params );
+		return route.link( this, params, );
 	}
 	
 	/**
+	 * Goto another page.
 	 * 
+	 * @param Link link
+	 * 
+	 * @return viod
 	 */
 	goto( link, )
 	{

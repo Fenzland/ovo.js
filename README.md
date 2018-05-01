@@ -12,6 +12,6 @@ Reject bundlers and transpilers. Let modules separate and achieve demand loading
 * Treelike history control.
 * Virtual DOM.
 * Both template and render function can used to build page or component.
-* Using standard Web Component.
+* Using Standard Web Component.
 * Extendable template language supporting.
 * Promise base state.

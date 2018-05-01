@@ -1,10 +1,12 @@
+const ROUTER= Symbol( 'router', );
 const ROUTE= Symbol( 'route', );
 const URL= Symbol( 'url', );
 
 export default class Link
 {
-	constructor( route, url, )
+	constructor( router, route, url, )
 	{
+		this[ROUTER]= router;
 		this[ROUTE]= route;
 		this[URL]= url;
 	}
@@ -21,6 +23,6 @@ export default class Link
 	
 	active()
 	{
-		this[ROUTE].router.goto( this, );
+		this[ROUTER].goto( this, );
 	}
 }

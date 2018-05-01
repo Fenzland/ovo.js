@@ -1,0 +1,12 @@
+body
+{
+	background-color: hsla(205,100%,80%,1);
+	color: white;
+	text-shadow: 0 0.1em 0.2em hsla(205,100%,20%,0.2); 
+}
+
+main
+{
+	background-color: hsla(205,80%,60%,1); 
+	box-shadow: 0 0.1em 0.5em hsla(205,100%,20%,0.2); 
+}
