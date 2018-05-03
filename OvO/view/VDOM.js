@@ -1,5 +1,6 @@
 import TextNode from './TextNode.js';
 import Listener from './Listener.js';
+import ITemplate from './ITemplate.js';
 
 const NAME= Symbol( 'name', );
 const NAMESPACE= Symbol( 'namespace', );
@@ -111,7 +112,7 @@ export function create( name, ...args )
 	const vdom= new VDOM( name, );
 	
 	for( let arg of args )
-		if( arg instanceof VDOM )
+		if( ITemplate.check( arg, ) )
 			vdom.appendChild( arg, );
 		else
 		if( arg && arg.constructor === Listener )

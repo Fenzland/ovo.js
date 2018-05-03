@@ -1,7 +1,8 @@
 import Page from '../OvO/view/Page.js';
-import HTML, { header, section, article, main, div, h1, h2, p, } from '../OvO/view/HTML.js';
+import HTML, { header, section, article, main, div, h1, h2, p, small, } from '../OvO/view/HTML.js';
 import SVG from '../OvO/view/SVG.js';
 import navs from './navs.widget.js';
+import footer from './footer.widget.js';
 
 // Create a PAGE
 export default new Page( {
@@ -17,8 +18,8 @@ export default new Page( {
 	// 
 	render()
 	{
-		// return a VDOM
-		return section(
+		// return a VDOM or Array of VDOMs
+		return [
 			
 			// pass a VDOM instance as a child.
 			
@@ -31,7 +32,7 @@ export default new Page( {
 			
 			header(
 				div(
-					{ class:'logo' },
+					{ class:'logo', },
 					
 					// both html and svg are supported.
 					SVG.svg(
@@ -45,7 +46,7 @@ export default new Page( {
 			),
 			main(
 				article(
-					h1( 'OvO.js', h2( ' a little toy js framework.', ), ),
+					h1( 'OvO.js', small( ' a little toy js framework.', ), ),
 					p( 'I\'m trying to discover a new mode of web application project or framewark. Maybe just for futrue. Use ES6 module and don\'t care of old browsers (or explorers looks like broken browsers). Reject bundlers and transpilers. Let modules separate and achieve demand loading. ', ),
 					h2( 'Routing', ),
 					p(
@@ -63,10 +64,12 @@ export default new Page( {
 						'Components are the molecules of pages and widgets. The basic components, Actually, are DOMs. Costom components are built with Standard Web Component, but with more friendly apis. ',
 						'It\'s necessary to make distinctions between widgets and components. Components are global, stateless, contextless, content free, and business free. Such as a wonderful waving button, a brilliant date picker, or an annoying popup dialog. ',
 						'Widgets can hold stats, contact with context, include contents, handle businesses. Such as a user info kit, a message list, a slidable banner, a login form... ',
+						'A widget owns lifecycle stand alone from the one of page. When the router jump from one page to another, a widget both in two pages will keep alive without any change, a widget only in first page will fell asleep and keep an single instance with key infos or states, wating for using again. ',
 					),
 				),
 			),
-		);
+			footer,
+		];
 	},
 	
 }, );

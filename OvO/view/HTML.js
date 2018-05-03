@@ -2,10 +2,11 @@ import { create, } from './VDOM.js';
 import Link from '../routing/Link.js'
 
 export const   header= ( ...args )=> create(  'header', ...args, );
+export const     main= ( ...args )=> create(    'main', ...args, );
+export const   footer= ( ...args )=> create(  'footer', ...args, );
 export const      nav= ( ...args )=> create(     'nav', ...args, );
 export const  section= ( ...args )=> create( 'section', ...args, );
 export const  article= ( ...args )=> create( 'article', ...args, );
-export const     main= ( ...args )=> create(    'main', ...args, );
 export const      div= ( ...args )=> create(     'div', ...args, );
 export const       h1= ( ...args )=> create(      'h1', ...args, );
 export const       h2= ( ...args )=> create(      'h2', ...args, );
@@ -14,6 +15,8 @@ export const       h4= ( ...args )=> create(      'h4', ...args, );
 export const       h5= ( ...args )=> create(      'h5', ...args, );
 export const       h6= ( ...args )=> create(      'h6', ...args, );
 export const        p= ( ...args )=> create(       'p', ...args, );
+export const     span= ( ...args )=> create(    'span', ...args, );
+export const    small= ( ...args )=> create(   'small', ...args, );
 
 export const a= ( ...args )=> {
 	const vdom= create( 'a', ...args );
@@ -49,6 +52,8 @@ export const input= {
 	datetime: ( ...args )=> create( 'input', ...args, { type:'datetime-local', } ),
 	color:    ( ...args )=> create( 'input', ...args, { type:'color', } ),
 	file:     ( ...args )=> create( 'input', ...args, { type:'file', } ),
+	textarea: ( ...args )=> create( 'textarea', ...args, ),
+	select:   ( ...args )=> create( 'select', ...args, ),
 };
 
 export default new Proxy( {}, {

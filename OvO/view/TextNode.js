@@ -1,17 +1,23 @@
+const CONTENT= Symbol( 'content', );
+
 export default class TextNode
 {
 	constructor( content )
 	{
-		this.content= content;
+		this[CONTENT]= content;
 	}
 	
 	toString()
 	{
-		return this.content;
+		const dom= document.createElement( 'span', );
+		
+		dom.innerText= this[CONTENT];
+		
+		return dom.innerHTML;
 	}
 	
 	toDOM( document, )
 	{
-		return new Text( this.content, );
+		return new Text( this[CONTENT], );
 	}
 }

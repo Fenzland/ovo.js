@@ -37,20 +37,20 @@ h8
 	border-bottom: 0.1em solid var(--theme-color);
 }
 
-h1>h2
+h1>small
 ,
-h2>h3
+h2>small
 ,
-h3>h4
+h3>small
 ,
-h4>h5
+h4>small
 ,
-h5>h6
+h5>small
 ,
-h6>h7
+h6>small
 ,
-h7>h8
-{ width: max-content; font-size: 0.5em; text-indent: 50%; }
+h7>small
+{ display:block;width: max-content; font-size: 0.5em; text-indent: 50%; }
 
 p
 { text-indent: 2em; }

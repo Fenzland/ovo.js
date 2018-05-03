@@ -1,4 +1,17 @@
-main
+body
+{
+	display: grid;
+	min-height: 100vh;
+	grid-template-rows: auto auto 1fr auto;
+}
+
+footer
+{
+	grid-row-start: 4;
+	text-align: center;
+}
+
+body>main>article
 {
 	margin: 1em calc( 20vmax - 20vh + 1em );
 	padding: 1em;
