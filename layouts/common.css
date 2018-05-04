@@ -9,6 +9,7 @@ footer
 {
 	grid-row-start: 4;
 	text-align: center;
+	padding: 1em;
 }
 
 body>main>article
