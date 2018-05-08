@@ -5,16 +5,10 @@ body
 	grid-template-rows: auto auto 1fr auto;
 }
 
-footer
+body>footer
 {
 	grid-row-start: 4;
 	text-align: center;
-	padding: 1em;
-}
-
-body>main>article
-{
-	margin: 1em calc( 20vmax - 20vh + 1em );
 	padding: 1em;
 }
 
@@ -27,9 +21,39 @@ h1
 	margin-right: 2fr;
 }
 
-nav
+body>header>nav
 {
 	margin-top: 3em;
 	display: flex;
 	justify-content: space-evenly;
+}
+
+body>header>nav>a
+{
+	padding: 1em;
+}
+
+body>main>article
+{
+	position: relative;
+	margin: 1em calc( 20vmax - 20vh + 1em );
+	padding: 2em;
+}
+
+body>main>article>footer
+{
+	text-align: right;
+}
+
+
+.logo
+{
+	width: fit-content;
+	margin: auto;
+}
+.logo>svg
+{
+	--size: 10vmax;
+	width: calc( 2*var(--size) );
+	height: var(--size);
 }

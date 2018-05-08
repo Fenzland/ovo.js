@@ -1,7 +1,6 @@
 import Route from './Route.js';
 import Link from './Link.js';
-import History from './History.js';
-import State from './State.js';
+import History, { State, } from './History.js';
 import View from '../view/View.js';
 
 const HISTORY= Symbol( 'history', );
@@ -60,9 +59,7 @@ export default class Router
 		const route= this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
 		
 		this[HISTORY].push(
-			new State(
-				new Link( route, window.location.href, ),
-			),
+			new State( window.location.href, ),
 		);
 	}
 	
@@ -93,7 +90,7 @@ export default class Router
 	 */
 	goto( link, )
 	{
-		const state= new State( link, );
+		const state= new State( link.url, );
 		
 		this.history.push( state, );
 		

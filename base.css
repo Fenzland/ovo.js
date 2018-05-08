@@ -54,3 +54,8 @@ h7>small
 
 p
 { text-indent: 2em; }
+
+:focus
+{
+	outline: none;
+}
