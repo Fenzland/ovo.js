@@ -10,7 +10,7 @@ export default class Interface
 	check( object, )
 	{
 		for( let i in this[PROTO] )
-			if(!( object[i] && object[i] instanceof this[PROTO][i] ))
+			if(!( object && object[i] && object[i] instanceof this[PROTO][i] ))
 				return false;
 		
 		return true;

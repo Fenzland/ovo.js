@@ -1,6 +1,7 @@
 import TextNode from './TextNode.js';
 import Listener from './Listener.js';
 import ITemplate from './ITemplate.js';
+import Model from '../model/Model.js';
 
 const NAME= Symbol( 'name', );
 const NAMESPACE= Symbol( 'namespace', );
@@ -9,6 +10,7 @@ const ATTRIBUTES= Symbol( 'attributes', );
 const LISTENERS= Symbol( 'listeners', );
 const APPEND_LISTENER= Symbol( 'append_listener', );
 const EMPTY= Symbol( 'empty', );
+const DOM= Symbol( 'dom', );
 
 export default class VDOM
 {
@@ -55,7 +57,7 @@ export default class VDOM
 		this[LISTENERS].push( listener, );
 	}
 	
-	toString()
+	toHTML()
 	{
 		let str= '<'+this[NAME];
 		
@@ -67,7 +69,7 @@ export default class VDOM
 		else
 		{
 			str+= '>';
-			str+= this[CHILDREN].join( '', );
+			str+= this[CHILDREN].map( x=> x.toHTML() ).join( '', );
 			str+= `</${this[NAME]}>`;
 		}
 		
@@ -81,6 +83,8 @@ export default class VDOM
 			? document.createElementNS( this[NAMESPACE], this[NAME])
 			: document.createElement( this[NAME], )
 		);
+		
+		this[DOM]= dom;
 		
 		for( let [ attr, value, ] of this[ATTRIBUTES] )
 			dom.setAttribute( attr, value, );
@@ -99,6 +103,11 @@ export default class VDOM
 		this[EMPTY]= true;
 		
 		return this;
+	}
+	
+	get children()
+	{
+		return this[CHILDREN];
 	}
 	
 	get isEmpty()
@@ -121,6 +130,9 @@ export function create( name, ...args )
 		if( arg && arg.constructor === Object )
 			for( let attr in arg )
 				vdom.setAttribute( attr, arg[attr], );
+		else
+		if( arg && arg.constructor === Model )
+			vdom.appendChild( new TextNode( arg ), );
 		else
 		if( typeof arg === 'string' || (arg && arg.constructor === String) )
 			vdom.appendChild( new TextNode( arg ), );

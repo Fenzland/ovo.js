@@ -15,8 +15,13 @@ export const       h4= ( ...args )=> create(      'h4', ...args, );
 export const       h5= ( ...args )=> create(      'h5', ...args, );
 export const       h6= ( ...args )=> create(      'h6', ...args, );
 export const        p= ( ...args )=> create(       'p', ...args, );
+export const       dl= ( ...args )=> create(      'dl', ...args, );
+export const       dt= ( ...args )=> create(      'dt', ...args, );
+export const       dd= ( ...args )=> create(      'dd', ...args, );
 export const     span= ( ...args )=> create(    'span', ...args, );
 export const    small= ( ...args )=> create(   'small', ...args, );
+export const     form= ( ...args )=> create(    'form', ...args, );
+export const    label= ( ...args )=> create(   'label', ...args, );
 
 export const a= ( ...args )=> {
 	const vdom= create( 'a', ...args );
@@ -34,24 +39,24 @@ export const a= ( ...args )=> {
 }
 
 export const input= {
-	input:    ( ...args )=> create( 'input', ...args, { type:'input', } ),
-	text:     ( ...args )=> create( 'input', ...args, { type:'text', } ),
-	search:   ( ...args )=> create( 'input', ...args, { type:'search', } ),
-	password: ( ...args )=> create( 'input', ...args, { type:'password', } ),
-	email:    ( ...args )=> create( 'input', ...args, { type:'email', } ),
-	url:      ( ...args )=> create( 'input', ...args, { type:'url', } ),
-	tel:      ( ...args )=> create( 'input', ...args, { type:'tel', } ),
-	number:   ( ...args )=> create( 'input', ...args, { type:'number', } ),
-	range:    ( ...args )=> create( 'input', ...args, { type:'range', } ),
-	radio:    ( ...args )=> create( 'input', ...args, { type:'radio', } ),
-	checkbox: ( ...args )=> create( 'input', ...args, { type:'checkbox', } ),
-	date:     ( ...args )=> create( 'input', ...args, { type:'date', } ),
-	month:    ( ...args )=> create( 'input', ...args, { type:'month', } ),
-	week:     ( ...args )=> create( 'input', ...args, { type:'week', } ),
-	time:     ( ...args )=> create( 'input', ...args, { type:'time', } ),
-	datetime: ( ...args )=> create( 'input', ...args, { type:'datetime-local', } ),
-	color:    ( ...args )=> create( 'input', ...args, { type:'color', } ),
-	file:     ( ...args )=> create( 'input', ...args, { type:'file', } ),
+	input:    ( ...args )=> create( 'input', ...args, { type:'input', } ).empty(),
+	text:     ( ...args )=> create( 'input', ...args, { type:'text', } ).empty(),
+	search:   ( ...args )=> create( 'input', ...args, { type:'search', } ).empty(),
+	password: ( ...args )=> create( 'input', ...args, { type:'password', } ).empty(),
+	email:    ( ...args )=> create( 'input', ...args, { type:'email', } ).empty(),
+	url:      ( ...args )=> create( 'input', ...args, { type:'url', } ).empty(),
+	tel:      ( ...args )=> create( 'input', ...args, { type:'tel', } ).empty(),
+	number:   ( ...args )=> create( 'input', ...args, { type:'number', } ).empty(),
+	range:    ( ...args )=> create( 'input', ...args, { type:'range', } ).empty(),
+	radio:    ( ...args )=> create( 'input', ...args, { type:'radio', } ).empty(),
+	checkbox: ( ...args )=> create( 'input', ...args, { type:'checkbox', } ).empty(),
+	date:     ( ...args )=> create( 'input', ...args, { type:'date', } ).empty(),
+	month:    ( ...args )=> create( 'input', ...args, { type:'month', } ).empty(),
+	week:     ( ...args )=> create( 'input', ...args, { type:'week', } ).empty(),
+	time:     ( ...args )=> create( 'input', ...args, { type:'time', } ).empty(),
+	datetime: ( ...args )=> create( 'input', ...args, { type:'datetime-local', } ).empty(),
+	color:    ( ...args )=> create( 'input', ...args, { type:'color', } ).empty(),
+	file:     ( ...args )=> create( 'input', ...args, { type:'file', } ).empty(),
 	textarea: ( ...args )=> create( 'textarea', ...args, ),
 	select:   ( ...args )=> create( 'select', ...args, ),
 };

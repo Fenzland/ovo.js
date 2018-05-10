@@ -1,8 +1,14 @@
+:root
+{
+	font-size: calc( 16px + 2.5vmin - 2.5vh );
+}
+
 body
 {
 	display: grid;
 	min-height: 100vh;
 	grid-template-rows: auto auto 1fr auto;
+	grid-template-columns: 100vw;
 }
 
 body>footer
@@ -17,20 +23,21 @@ h1
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
-	margin-left: 1fr;
-	margin-right: 2fr;
 }
 
 body>header>nav
 {
 	margin-top: 3em;
 	display: flex;
+	overflow-x: auto;
+	flex-wrap: wrap;
 	justify-content: space-evenly;
 }
 
 body>header>nav>a
 {
 	padding: 1em;
+	margin: 0.25em;
 }
 
 body>main>article
@@ -43,17 +50,4 @@ body>main>article
 body>main>article>footer
 {
 	text-align: right;
-}
-
-
-.logo
-{
-	width: fit-content;
-	margin: auto;
-}
-.logo>svg
-{
-	--size: 10vmax;
-	width: calc( 2*var(--size) );
-	height: var(--size);
 }

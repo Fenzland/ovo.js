@@ -1,5 +1,5 @@
 body
-{ margin:0; }
+{ margin: 0; }
 
 a
 { color: inherit; }
@@ -53,9 +53,10 @@ h7>small
 { display:block;width: max-content; font-size: 0.5em; text-indent: 50%; }
 
 p
-{ text-indent: 2em; }
+{ text-indent: 2em; line-height: 1.5; }
 
 :focus
-{
-	outline: none;
-}
+{ outline: none; }
+
+::-webkit-scrollbar
+{ display: none; }

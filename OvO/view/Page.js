@@ -9,12 +9,13 @@ export default class Page
 		this.template= template;
 	}
 	
-	render( params, query, anchor, )
+	render( params, queries, anchor, )
 	{
-		query= Query.parse( query, );
+		queries= Query.parse( queries, );
 		
-		// TODO
-		// return this.template;
-		return this.renderMethod();
+		if( '#' === anchor.slice( 0, 1, ) )
+			anchor= anchor.slice( 1, );
+		
+		return this.renderMethod( { params, queries, anchor, }, );
 	}
 }

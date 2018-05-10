@@ -12,9 +12,9 @@ export default class Widget
 		return this.renderMethod();
 	}
 	
-	toString()
+	toHTML()
 	{
-		return this.render().toString();
+		return this.render().toHTML();
 	}
 	
 	toDOM( document, )

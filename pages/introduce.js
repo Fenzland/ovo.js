@@ -61,7 +61,7 @@ export default new Page( {
 					...contents,
 					footer(
 						a(
-							// Todo make a link with a state as href.
+							// Todo make a link with a state as href to travel history.
 							{ href:'javascript:history.back();', },
 							'<<< Back Home',
 						),
