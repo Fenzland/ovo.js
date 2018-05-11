@@ -7,9 +7,10 @@ import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
 
 const m= new Model( {
-	'title': '',
-	'username': '',
-	'password': '',
+	title: '',
+	username: '',
+	password: '',
+	repeating: '',
 }, );
 
 (( f, ...args )=> f( f, ...args, ) )( ( f, i, str, p, interval, )=>{
@@ -27,7 +28,7 @@ export default new Page( {
 	{
 		return [
 			header(
-				h1( HTML.code( m.title, ), ),
+				h1( m.title, { style:'font-family:monospace;', } ),
 				$navs,
 			),
 			main(
@@ -53,6 +54,19 @@ export default new Page( {
 									m.password.express( x=> checkPassword( x, ), ),
 								),
 							),
+							label(
+								dt( 'Repeat Password', ),
+								dd(
+									input.password(
+										new Listener( 'input', e=> m.repeating=e.target.value ),
+									),
+									Model.express(
+										( x, y, )=> checkRepeating( x, y, ),
+										m.password,
+										m.repeating,
+									),
+								),
+							),
 						),
 					),
 				),
@@ -74,7 +88,20 @@ function checkUsername( username, )
 	if(!( /^[a-zA-Z_]\w*$/.test( username, ) ))
 		return ' Only use "A-Z", "a-z", "0-9", "_" and not start with numbers.';
 	
-	return ` Username "${username}" is valid`;
+	const fakeOnlineChack= new Promise(
+		( resolve, reject, )=> {
+			setTimeout( ()=> (
+				Math.random() > 0.3
+				? resolve( ` Username "${username}" is valid`, )
+				: reject()
+			), 400, );
+		},
+	);
+	
+	fakeOnlineChack.temp= ' Online chacking...';
+	fakeOnlineChack.rejected= ' Connection Error.';
+	
+	return fakeOnlineChack;
 }
 
 function checkPassword( password, )
@@ -94,5 +121,16 @@ function checkPassword( password, )
 	)
 		return ' Password is too simple.';
 	
-	return ` Password is valid`;
+	return ` OK.`;
+}
+
+function checkRepeating( password, repeating, )
+{
+	if(!( repeating ))
+		return '';
+	else
+	if( password !== repeating )
+		return ' Passwords unpaired.';
+	else
+		return ' OK.';
 }

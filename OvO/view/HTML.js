@@ -20,6 +20,7 @@ export const       dt= ( ...args )=> create(      'dt', ...args, );
 export const       dd= ( ...args )=> create(      'dd', ...args, );
 export const     span= ( ...args )=> create(    'span', ...args, );
 export const    small= ( ...args )=> create(   'small', ...args, );
+export const     code= ( ...args )=> create(    'code', ...args, );
 export const     form= ( ...args )=> create(    'form', ...args, );
 export const fieldset= ( ...args )=> create('fieldset', ...args, );
 export const   legend= ( ...args )=> create(  'legend', ...args, );

@@ -74,9 +74,14 @@ body>main>form>fieldset>legend
 {
 	background-color: hsla(0,0%,100%,1);
 	box-shadow:
-		0 0 0 1px var(--body-bgc)
+		0 0 0 2px hsla(0,0%,100%,1)
+	,
+		0 0 1px 3px var(--body-bgc)
+	,
+		inset 0 0 0 1px var(--body-bgc)
 	;
-	border-radius: 1em
+	border-radius: 4em;
+	border-color: transparent;
 }
 
 body>main>form>fieldset input
@@ -88,4 +93,12 @@ body>main>form>fieldset input
 body>main>form>fieldset input:focus
 {
 	border-color: hsla(0,0%,0%,0.5);
+}
+
+code
+{
+	background-color: hsla(0,0%,80%,1);
+	color: hsla(0,0%,100%,1);
+	text-shadow: 0 1px 2px hsla(0,0%,0%,0.4);
+	border-radius: 0.2em;
 }

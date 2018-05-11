@@ -6,6 +6,7 @@ import router from '../routes/index.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
 import { summary as $introduce, } from './introduce.js';
+import { summary as $model, } from './model.js';
 import css_layout from '../layouts/home.css.js';
 
 // Create a PAGE
@@ -60,11 +61,17 @@ export default new Page( {
 					),
 				),
 				article(
-					h1( 'View Model', ),
+					h1( 'Model', ),
+					...$model,
 					footer(
 						a(
-							{ href:router.linkTo( 'view-model', ), },
-							'>>> Demo',
+							{ href:router.linkTo( 'model', ), },
+							'>>> Read More',
+						),
+						ef( '&ensp;', ),
+						a(
+							{ href:router.linkTo( 'model-demo', ), },
+							'Demo',
 						),
 					),
 				),

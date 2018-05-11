@@ -45,20 +45,27 @@ export default class Model
 		}, );
 	}
 	
-	express( callback, )
-	{
-		const expression= new Model( callback( this[ORIGIN][VALUE], ), );
-		
-		this[ORIGIN].listenedBy( value=> expression.setValue( callback( value, ), ) );
-		
-		return expression;
-	}
-	
 	setValue( value, )
 	{
-		this[ORIGIN][VALUE]= value;
-		
-		this[ORIGIN][LISTENERS].forEach( listener=> listener( value, ), );
+		if( value instanceof Promise )
+		{
+			if( value.temp !== undefined )
+				this[ORIGIN].setValue( value.temp, );
+			
+			value.then(
+				x=> this[ORIGIN].setValue( x, ),
+				e=> {
+					this[ORIGIN].setValue( value.rejected, );
+					throw e;
+				},
+			);
+		}
+		else
+		{
+			this[ORIGIN][VALUE]= value;
+			
+			this[ORIGIN][LISTENERS].forEach( listener=> listener( value, ), );
+		}
 	}
 	
 	valueOf()
@@ -74,5 +81,26 @@ export default class Model
 	listenedBy( listener, )
 	{
 		this[ORIGIN][LISTENERS].push( listener, );
+	}
+	
+	express( callback, )
+	{
+		return Model.express( callback, this, );
+		const expression= new Model( callback( this[ORIGIN][VALUE], ), );
+		
+		this[ORIGIN].listenedBy( value=> expression.setValue( callback( value, ), ) );
+		
+		return expression;
+	}
+	
+	static express( callback, ...models )
+	{
+		const expression= new Model( callback( ...models.map( x=>x.valueOf(), ), ), );
+		
+		models.forEach(
+			model=> model.listenedBy( ()=> expression.setValue( callback( ...models.map( x=>x.valueOf(), ), ), ) ),
+		);
+		
+		return expression;
 	}
 }
