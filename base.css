@@ -55,6 +55,19 @@ h7>small
 p
 { text-indent: 2em; line-height: 1.5; }
 
+fieldset
+{ --fieldset-side-padding: calc( 1em + 1px ); }
+
+fieldset
+{ margin:0; padding:0; padding:1em; border-width:1px; border-style:solid; border-color:grey; }
+
+fieldset>legend
+{ padding:0; }
+
+
+input, textarea, select, button
+{ font:inherit; border-style:solid; border-width:1px; border-color:grey; padding:0.25em; }
+
 :focus
 { outline: none; }
 

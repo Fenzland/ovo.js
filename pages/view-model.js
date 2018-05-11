@@ -1,7 +1,7 @@
 import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
 import Model from '../OvO/model/Model.js';
-import HTML, { header, section, main, form, label, input, div, h1, dl, dt, dd, p, } from '../OvO/view/HTML.js';
+import HTML, { header, section, main, form, fieldset, legend, label, input, div, h1, dl, dt, dd, p, } from '../OvO/view/HTML.js';
 import Pointer from '../OvO/support/Pointer.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
@@ -32,23 +32,26 @@ export default new Page( {
 			),
 			main(
 				form(
-					dl(
-						label(
-							dt( 'Username', ),
-							dd(
-								input.text(
-									new Listener( 'input', e=> m.username=e.target.value ),
+					fieldset(
+						legend( 'Model Binding', ),
+						dl(
+							label(
+								dt( 'Username', ),
+								dd(
+									input.text(
+										new Listener( 'input', e=> m.username=e.target.value ),
+									),
+									m.username.express( x=> checkUsername( x, ), ),
 								),
-								m.username.express( x=> checkUsername( x, ), ),
 							),
-						),
-						label(
-							dt( 'Password', ),
-							dd(
-								input.password(
-									new Listener( 'input', e=> m.password=e.target.value ),
+							label(
+								dt( 'Password', ),
+								dd(
+									input.password(
+										new Listener( 'input', e=> m.password=e.target.value ),
+									),
+									m.password.express( x=> checkPassword( x, ), ),
 								),
-								m.password.express( x=> checkPassword( x, ), ),
 							),
 						),
 					),
@@ -65,7 +68,7 @@ function checkUsername( username, )
 	if(!( username ))
 		return '';
 	
-	if( username.length < 6 )
+	if( username.length < 4 )
 		return ' Username is to short.';
 	
 	if(!( /^[a-zA-Z_]\w*$/.test( username, ) ))
@@ -79,7 +82,7 @@ function checkPassword( password, )
 	if(!( password ))
 		return '';
 	
-	if( password.length < 6 )
+	if( password.length < 8 )
 		return ' Password is to short.';
 	
 	if(

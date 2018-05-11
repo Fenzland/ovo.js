@@ -21,6 +21,8 @@ export const       dd= ( ...args )=> create(      'dd', ...args, );
 export const     span= ( ...args )=> create(    'span', ...args, );
 export const    small= ( ...args )=> create(   'small', ...args, );
 export const     form= ( ...args )=> create(    'form', ...args, );
+export const fieldset= ( ...args )=> create('fieldset', ...args, );
+export const   legend= ( ...args )=> create(  'legend', ...args, );
 export const    label= ( ...args )=> create(   'label', ...args, );
 
 export const a= ( ...args )=> {

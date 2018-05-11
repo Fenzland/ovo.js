@@ -40,14 +40,34 @@ body>header>nav>a
 	margin: 0.25em;
 }
 
-body>main>article
+body>main>*
 {
+	--main-side-margin: calc( 20vmax - 20vh + 1em );
+	--main-side-padding: calc( var(--main-side-margin) + 2em );
 	position: relative;
-	margin: 1em calc( 20vmax - 20vh + 1em );
+	margin: 1em var(--main-side-margin);
 	padding: 2em;
 }
 
 body>main>article>footer
 {
 	text-align: right;
+}
+
+body>main>form>fieldset
+{
+	position: relative;
+}
+
+body>main>form>fieldset>legend
+{
+	padding: 0.5em 1em;
+}
+
+body>main>form>fieldset>dl
+{
+	width: 30em;
+	max-width: calc( 100vw - 2*var(--main-side-padding) - 2*var(--fieldset-side-padding) );
+	margin-left: auto;
+	margin-right: auto;
 }

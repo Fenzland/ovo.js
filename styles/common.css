@@ -57,3 +57,35 @@ body>main>article::before
 	box-shadow: inset 0 0.1em 0.5em hsla(0,0%,0%,0.2);
 	background-color: var(--body-bgc);
 }
+
+body>main>form>fieldset
+{
+	border-radius: 0px;
+	background-color: hsla(0,0%,100%,1);
+	border-color: var(--body-bgc);
+	box-shadow:
+		0 1px 1px 1px var(--body-bgc)
+	,
+		0 0 0 0.5em hsla(0,0%,100%,0.5)
+	;
+}
+
+body>main>form>fieldset>legend
+{
+	background-color: hsla(0,0%,100%,1);
+	box-shadow:
+		0 0 0 1px var(--body-bgc)
+	;
+	border-radius: 1em
+}
+
+body>main>form>fieldset input
+{
+	border-color: hsla(0,0%,0%,0.2);
+	transition: border-color 200ms;
+}
+
+body>main>form>fieldset input:focus
+{
+	border-color: hsla(0,0%,0%,0.5);
+}
