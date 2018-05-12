@@ -45,13 +45,33 @@ body>main>*
 	--main-side-margin: calc( 20vmax - 20vh + 1em );
 	--main-side-padding: calc( var(--main-side-margin) + 2em );
 	position: relative;
-	margin: 1em var(--main-side-margin);
+	margin: 1em var(--main-side-margin) 3em;
+}
+
+body>main>article
+{
 	padding: 2em;
 }
 
 body>main>article>footer
 {
 	text-align: right;
+}
+
+body>main>table
+{
+}
+
+body>main>table>caption
+{
+	padding: 0.5em;
+}
+
+body>main>table td
+,
+body>main>table th
+{
+	padding: 0.5em 1em;
 }
 
 body>main>form>fieldset

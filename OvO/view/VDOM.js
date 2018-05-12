@@ -46,11 +46,15 @@ export default class VDOM
 			else
 			// String: make a TextNode as a child
 			if( typeof arg === 'string' || (arg && arg.constructor === String) )
-				this.appendChild( new TextNode( arg ), );
+				this.appendChild( new TextNode( arg, ), );
 			else
 			// Model: treat as a String
 			if( arg && arg.constructor === Model )
-				this.appendChild( new TextNode( arg ), );
+				this.appendChild( new TextNode( arg, ), );
+			else
+			// other: convert to a String
+			if( arg || !isNaN( arg, ) )
+				this.appendChild( new TextNode( `${arg}`, ), );
 		
 		return this;
 	}

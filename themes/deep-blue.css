@@ -1,0 +1,61 @@
+body
+{
+	--body-bgc: hsl(205, 100%, 80%);
+	--section-bgc: hsla(205,80%,60%,1);
+	color: hsla(0,0%,100%,1);
+}
+
+body>header>nav>a
+{
+	color: hsla(205,80%,40%,1);
+}
+
+body>main>article
+{
+	box-shadow: 0 0.1em 0.2em hsla(205,100%,20%,0.2);
+}
+
+body>main>table>thead
+{
+	background-color: hsla(205,0%,100%,1);
+	color: hsla(205,80%,60%,1);
+	box-shadow: 0 0.1em 0.5em hsla(205,100%,20%,0.2);
+}
+
+body>main>table>tbody>tr:nth-child(even)
+{
+	background-color: hsla(205,100%,100%,0.1);
+}
+
+body>main>form>fieldset
+{
+	box-shadow:
+		0 1px 1px 1px var(--body-bgc)
+	,
+		0 0 0 0.5em hsla(205,80%,60%,0.5)
+	;
+}
+
+body>main>form>fieldset>legend
+{
+	border-color: hsla(0,0%,100%,0.5);
+	color: var(--section-bgc);
+}
+
+body>main>form>fieldset input
+{
+	border-color: hsla(0,0%,100%,1);
+	background-color: hsla(205,100%,80%,1);
+	transition: border-color 200ms, background-color 200ms;
+}
+
+body>main>form>fieldset input:focus
+{
+	border-color: hsla(0,0%,100%,1);
+	background-color: hsla(0,0%,100%,1);
+}
+
+code
+{
+	background-color: hsla(205,100%,70%,1);
+}

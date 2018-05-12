@@ -1,8 +1,8 @@
 body
 {
 	--body-bgc: hsla(0,0%,93%,1);
+	--section-bgc: hsla(0,0%,100%,1);
 	background-color: var(--body-bgc);
-	background-image: linear-gradient( 180deg, hsla(0,0%,100%,0.75), transparent 10em );
 	color: hsla(0,0%,30%,1);
 	font-family: sans-serif;
 }
@@ -40,10 +40,11 @@ body>header>nav>a:active
 
 body>main>article
 {
-	background-color: hsla(0,0%,100%,1);
+	background-color: var(--section-bgc);
 	box-shadow: 0 0.1em 0.5em hsla(0,0%,0%,0.2);
 	border-top-left-radius: 1.5em;
 }
+
 
 body>main>article::before
 {
@@ -58,10 +59,21 @@ body>main>article::before
 	background-color: var(--body-bgc);
 }
 
+body>main>table
+{
+	background-color: var(--section-bgc);
+	box-shadow: 0 0.1em 0.5em hsla(0,0%,0%,0.2);
+}
+
+body>main>table>caption
+{
+	background-color: var(--section-bgc);
+	border-radius: 1em 1em 0 0;
+}
+
 body>main>form>fieldset
 {
-	border-radius: 0px;
-	background-color: hsla(0,0%,100%,1);
+	background-color: var(--section-bgc);
 	border-color: var(--body-bgc);
 	box-shadow:
 		0 1px 1px 1px var(--body-bgc)

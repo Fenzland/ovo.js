@@ -1,0 +1,37 @@
+body
+{
+	--body-bgc: hsl(205, 100%, 80%);
+	--section-bgc: hsla(205,0%,100%,1);
+}
+
+body>header>nav>a
+{
+	text-shadow: 0 0 0.5em hsla(205,0%,100%,1);
+}
+
+body>main>article
+{
+	box-shadow: 0 0.1em 0.2em hsla(205,100%,20%,0.2);
+}
+
+body>main>table>thead
+{
+	background-color: hsla(205,60%,60%,1);
+	color: hsla(205,0%,100%,1);
+	box-shadow: 0 0.1em 0.5em hsla(205,100%,20%,0.2);
+}
+
+body>main>table>tbody>tr:nth-child(even)
+{
+	background-color: hsla(205,100%,95%,1);
+}
+
+body>main>form>fieldset input:focus
+{
+	border-color: hsla(205,100%,50%,0.5);
+}
+
+code
+{
+	background-color: hsla(205,100%,70%,1);
+}

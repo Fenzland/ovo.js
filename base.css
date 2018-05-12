@@ -72,6 +72,12 @@ input, textarea, select, button
 code
 { font-family:monospace; }
 
+table
+{ border-spacing:0; border-collapse:collapse; width:-webkit-fill-available; width:fill-available; }
+
+th
+{ text-align:initial; }
+
 :focus
 { outline: none; }
 

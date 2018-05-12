@@ -2,7 +2,7 @@ import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
 import { If, } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
-import HTML, { header, section, main, form, fieldset, legend, label, input, div, h1, dl, dt, dd, p, } from '../OvO/view/HTML.js';
+import HTML, { header, main, form, fieldset, legend, label, input, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, } from '../OvO/view/HTML.js';
 import Pointer from '../OvO/support/Pointer.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
@@ -70,6 +70,46 @@ export default new Page( {
 									),
 								),
 							),
+						),
+					),
+				),
+				table(
+					caption( 'Planets', ),
+					thead(
+						tr(
+							th( 'id', ),
+							th( 'name', ),
+							th( 'mass', ),
+							th( 'diameter', ),
+							th( 'semi-major axis', ),
+							th( 'orbital period', ),
+							th( 'orbital eccentricity', ),
+							th( 'rotation period', ),
+							th( 'moons', ),
+						),
+					),
+					tbody(
+						tr(
+							td( 1, ),
+							td( 'Mercury', ),
+							td( 0.06, ),
+							td( 0.382, ),
+							td( 0.39, ),
+							td( 0.24, ),
+							td( 0.206, ),
+							td( 58.64, ),
+							td( 0, ),
+						),
+						tr(
+							td( 2, ),
+							td( 'Venus', ),
+							td( 0.82, ),
+							td( 0.949, ),
+							td( 0.72, ),
+							td( 0.62, ),
+							td( 0.007, ),
+							td( -243.02, ),
+							td( 0, ),
 						),
 					),
 				),

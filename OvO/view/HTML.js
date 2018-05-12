@@ -25,6 +25,13 @@ export const     form= ( ...args )=> create(    'form', ...args, );
 export const fieldset= ( ...args )=> create('fieldset', ...args, );
 export const   legend= ( ...args )=> create(  'legend', ...args, );
 export const    label= ( ...args )=> create(   'label', ...args, );
+export const    table= ( ...args )=> create(   'table', ...args, );
+export const  caption= ( ...args )=> create( 'caption', ...args, );
+export const    thead= ( ...args )=> create(   'thead', ...args, );
+export const    tbody= ( ...args )=> create(   'tbody', ...args, );
+export const       tr= ( ...args )=> create(      'tr', ...args, );
+export const       th= ( ...args )=> create(      'th', ...args, );
+export const       td= ( ...args )=> create(      'td', ...args, );
 
 export const a= ( ...args )=> {
 	const vdom= create( 'a', ...args );
