@@ -1,5 +1,6 @@
 import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
+import { If, } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
 import HTML, { header, section, main, form, fieldset, legend, label, input, div, h1, dl, dt, dd, p, } from '../OvO/view/HTML.js';
 import Pointer from '../OvO/support/Pointer.js';
@@ -54,16 +55,18 @@ export default new Page( {
 									m.password.express( x=> checkPassword( x, ), ),
 								),
 							),
-							label(
-								dt( 'Repeat Password', ),
-								dd(
-									input.password(
-										new Listener( 'input', e=> m.repeating=e.target.value ),
-									),
-									Model.express(
-										( x, y, )=> checkRepeating( x, y, ),
-										m.password,
-										m.repeating,
+							If( m.password, ).then(
+								label(
+									dt( 'Repeat Password', ),
+									dd(
+										input.password(
+											new Listener( 'input', e=> m.repeating=e.target.value ),
+										),
+										Model.express(
+											( x, y, )=> checkRepeating( x, y, ),
+											m.password,
+											m.repeating,
+										),
 									),
 								),
 							),

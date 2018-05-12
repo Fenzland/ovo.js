@@ -52,7 +52,7 @@ export default new Page( {
 			),
 			main(
 				article(
-					...$introduce,
+					$introduce,
 					footer(
 						a(
 							{ href:router.linkTo( 'introduce', ), },
@@ -62,7 +62,7 @@ export default new Page( {
 				),
 				article(
 					h1( 'Model', ),
-					...$model,
+					$model,
 					footer(
 						a(
 							{ href:router.linkTo( 'model', ), },

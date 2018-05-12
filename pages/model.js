@@ -58,7 +58,7 @@ export default new Page( {
 			),
 			main(
 				article(
-					...contents,
+					contents,
 					footer(
 						a(
 							// Todo make a link with a state as href to travel history.

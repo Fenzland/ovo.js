@@ -14,11 +14,21 @@ export default class Widget
 	
 	toHTML()
 	{
-		return this.render().toHTML();
+		const vdoms= this.render();
+		
+		if( Array.isArray( vdoms, ) )
+			return vdoms.map( x=> x.toHTML(), );
+		else
+			return vdoms.toHTML();
 	}
 	
 	toDOM( document, )
 	{
-		return this.render().toDOM( document, );
+		const vdoms= this.render();
+		
+		if( Array.isArray( vdoms, ) )
+			return vdoms.map( x=> x.toDOM(), );
+		else
+			return vdoms.toDOM( document, );
 	}
 }

@@ -62,9 +62,11 @@ export default class Model
 		}
 		else
 		{
+			const originValue= this[ORIGIN][VALUE];
+			
 			this[ORIGIN][VALUE]= value;
 			
-			this[ORIGIN][LISTENERS].forEach( listener=> listener( value, ), );
+			this[ORIGIN][LISTENERS].forEach( listener=> listener( value, originValue, ), );
 		}
 	}
 	

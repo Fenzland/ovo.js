@@ -24,6 +24,37 @@ export default class VDOM
 		this[EMPTY]= false;
 	}
 	
+	fill( ...args )
+	{
+		for( let arg of args )
+			// Array: fill each
+			if( Array.isArray( arg, ) )
+				this.fill( ...arg, );
+			else
+			// ITemplate: as a child
+			if( ITemplate.check( arg, ) )
+				this.appendChild( arg, );
+			else
+			// Listener: listen
+			if( arg && arg.constructor === Listener )
+				this[APPEND_LISTENER]( arg, );
+			else
+			// Plant Object: as attributes
+			if( arg && arg.constructor === Object )
+				for( let attr in arg )
+					this.setAttribute( attr, arg[attr], );
+			else
+			// String: make a TextNode as a child
+			if( typeof arg === 'string' || (arg && arg.constructor === String) )
+				this.appendChild( new TextNode( arg ), );
+			else
+			// Model: treat as a String
+			if( arg && arg.constructor === Model )
+				this.appendChild( new TextNode( arg ), );
+		
+		return this;
+	}
+	
 	appendChild( child, )
 	{
 		this[CHILDREN].push( child, );
@@ -89,11 +120,19 @@ export default class VDOM
 		for( let [ attr, value, ] of this[ATTRIBUTES] )
 			dom.setAttribute( attr, value, );
 		
-		for( let child of this[CHILDREN] )
-			dom.appendChild( child.toDOM( document, ), );
-		
 		for( let listener of this[LISTENERS] )
 			listener.listenTo( dom, );
+		
+		for( let child of this[CHILDREN] )
+		{
+			const childDoms= child.toDOM( document, );
+			
+			if( Array.isArray( childDoms, ) )
+				for( let childDom of childDoms )
+					dom.appendChild( childDom, );
+			else
+				dom.appendChild( childDoms, );
+		}
 		
 		return dom;
 	}
@@ -114,54 +153,23 @@ export default class VDOM
 	{
 		return this[EMPTY];
 	}
+	
+	static create( name, ...args )
+	{
+		return new VDOM( name, ).fill( ...args, );
+	}
+	
+	static createNS( namespace, name, ...args )
+	{
+		return new VDOM( name, namespace, ).fill( ...args, );
+	}
+	
+	static diff( x, y, )
+	{
+		
+	}
 }
 
-export function create( name, ...args )
-{
-	const vdom= new VDOM( name, );
-	
-	for( let arg of args )
-		if( ITemplate.check( arg, ) )
-			vdom.appendChild( arg, );
-		else
-		if( arg && arg.constructor === Listener )
-			vdom[APPEND_LISTENER]( arg, );
-		else
-		if( arg && arg.constructor === Object )
-			for( let attr in arg )
-				vdom.setAttribute( attr, arg[attr], );
-		else
-		if( arg && arg.constructor === Model )
-			vdom.appendChild( new TextNode( arg ), );
-		else
-		if( typeof arg === 'string' || (arg && arg.constructor === String) )
-			vdom.appendChild( new TextNode( arg ), );
-	
-	return vdom;
-}
-
-export function createNS( namespace, name, ...args )
-{
-	const vdom= new VDOM( name, namespace, );
-	
-	for( let arg of args )
-		if( arg instanceof VDOM )
-			vdom.appendChild( arg, );
-		else
-		if( arg && arg.constructor === Listener )
-			vdom[APPEND_LISTENER]( arg, );
-		else
-		if( arg && arg.constructor === Object )
-			for( let attr in arg )
-				vdom.setAttribute( attr, arg[attr], );
-		else
-		if( typeof arg === 'string' || (arg && arg.constructor === String) )
-			vdom.appendChild( new TextNode( arg ), );
-	
-	return vdom;
-}
-
-export function diff( x, y )
-{
-	
-}
+export const create= VDOM.create;
+export const createNS= VDOM.createNS;
+export const diff= VDOM.diff;

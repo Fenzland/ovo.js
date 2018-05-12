@@ -1,10 +1,13 @@
+const CONTAINER= Symbol( 'container', );
+const INSERT= Symbol( 'insert', );
+
 import { create, diff, } from './VDOM.js'
 
 export default class View
 {
 	constructor( container, )
 	{
-		this.container= container;
+		this[CONTAINER]= container;
 	}
 	
 	update( vdoms )
@@ -15,30 +18,37 @@ export default class View
 		
 		//*
 		
-		this.container.innerHTML= '';
+		this[CONTAINER].innerHTML= '';
 		
-		if( vdoms instanceof Array ){
-			vdoms= create( 'body', ...vdoms );
+		if( Array.isArray( vdoms, ) ){
+			const container= create( this[CONTAINER].tagName, ...vdoms );
 			
-			for( let vdom of vdoms.children )
-				this.container.appendChild( vdom.toDOM( document, ), );
+			container.children.forEach( x=> this[INSERT]( x.toDOM( document, ), ), );
 		}
 		else
 		{
-			this.container.appendChild( vdoms.toDOM( document, ), );
+			this[INSERT]( vdoms.toDOM( document, ), );
 		}
 		
 		/*/
 		
 		let html= '';
-		if( vdoms instanceof Array )
+		if( Array.isArray( vdoms, ) )
 			for( let vdom of vdoms )
 				html+= vdom.toHTML();
 		else
 			html+= vdoms.toHTML();
-		this.container.innerHTML= html;
+		this[CONTAINER].innerHTML= html;
 		
 		//*/
+	}
+	
+	[INSERT]( doms, )
+	{
+		if( Array.isArray( doms, ) )
+			doms.forEach( x=> this[CONTAINER].appendChild( x, ), );
+		else
+			this[CONTAINER].appendChild( doms, );
 	}
 	
 	loading()
