@@ -1,12 +1,16 @@
 import VDOM from './VDOM.js';
 import TextNode from './TextNode.js';
+import Model, { ArrayModel, } from '../model/Model.js';
 
 const MODEL= Symbol( 'model', );
 const VDOMS= Symbol( 'vdoms', );
 const DOMS= Symbol( 'doms', );
 const ACTIVED_DOMS= Symbol( 'get_doms', );
 const GET_DOMS= Symbol( 'get_doms', );
-const SWITCH= Symbol( 'switch', );
+const UPDATE= Symbol( 'update', );
+const TEMPLATE= Symbol( 'template', );
+const MAKE_ROW= Symbol( 'make_row', );
+const DOCUMENT= Symbol( 'document', );
 
 export default class Ctrl
 {
@@ -26,7 +30,7 @@ class IfCtrl extends Ctrl
 		
 		model.listenedBy( ( v, o, )=>{
 			if( !!v ^ !!o )
-				this[SWITCH]( +!!v, );
+				this[UPDATE]( +!!v, );
 		}, );
 		
 		this[DOMS]= {};
@@ -52,7 +56,7 @@ class IfCtrl extends Ctrl
 	
 	toHTML()
 	{
-		return this[ACTIVED_VDOMS].map( x=> x.toHTML(), ).join( '', );
+		return this[VDOMS][this.value].map( x=> x.toHTML(), ).join( '', );
 	}
 	
 	toDOM( document, )
@@ -74,7 +78,7 @@ class IfCtrl extends Ctrl
 		
 	}
 	
-	[SWITCH]( value, )
+	[UPDATE]( value, )
 	{
 		// not render yet
 		if(!( this[ACTIVED_DOMS] )) return;
@@ -99,10 +103,76 @@ export function If( model, )
 
 export function IfNot( model, )
 {
-	
+	return new IfCtrl( model.express( x=> !x, ) );
 }
 
-export function For( model, )
+class ForEachCtrl extends Ctrl
 {
+	constructor( model, template, )
+	{
+		super();
+		
+		if(!( model instanceof ArrayModel ))
+			throw 'The model for ForEach must be an ArrayModel.';
+		
+		if(!( 'function' === typeof template ))
+			throw 'The template for ForEach must be a Function.';
+		
+		this[MODEL]= model;
+		
+		model.listenedBy( ( i, model, )=> this[UPDATE]( i, model, ), );
+		
+		this[TEMPLATE]= template;
+	}
 	
+	toHTML()
+	{
+		return this[MODEL].map(
+			x=> this[MAKE_ROW]( x, ).map( x=> x.toHTML(), ).join( '', ),
+		).join( '', );
+	}
+	
+	toDOM( document, )
+	{
+		this[DOCUMENT]= document;
+		this[ACTIVED_DOMS]= this[MODEL].map(
+			x=> {
+				const doms= this[MAKE_ROW]( x, ).map( x=> x.toDOM( document, ), );
+				
+				if(!( doms.length ))
+					doms.push( new TextNode( '', ), );
+				
+				return doms;
+			},
+		).concat( [ [ new Text( '', ), ], ], );
+		
+		return this[ACTIVED_DOMS].reduce( ( x, y, )=> x.concat( y, ), [], );
+	}
+	
+	[MAKE_ROW]( x, )
+	{
+		return VDOM.create( '', this[TEMPLATE]( x, ), ).children;
+	}
+	
+	[UPDATE]( i, model, )
+	{
+		if(!( this[ACTIVED_DOMS] )) return;
+		
+		if( model )
+		{
+			const vdoms= this[MAKE_ROW]( model, );
+			const doms= vdoms.map( x=> x.toDOM( this[DOCUMENT], ), )
+			
+			this[ACTIVED_DOMS][i][0].before( ...doms, );
+			
+			this[ACTIVED_DOMS].splice( i, 0, doms, );
+		}
+		else
+			this[ACTIVED_DOMS].splice( i, 1, ).forEach( x=> x.remove(), );
+	}
+}
+
+export function ForEach( model, template, )
+{
+	return new ForEachCtrl( model, template, );
 }

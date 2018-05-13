@@ -1,11 +1,12 @@
 import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
-import { If, } from '../OvO/view/Ctrl.js';
+import { If, ForEach } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
 import HTML, { header, main, form, fieldset, legend, label, input, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, } from '../OvO/view/HTML.js';
 import Pointer from '../OvO/support/Pointer.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
+import planetsData from './planets.data.js';
 
 const m= new Model( {
 	title: '',
@@ -13,6 +14,15 @@ const m= new Model( {
 	password: '',
 	repeating: '',
 }, );
+
+const planets= new Model( [], );
+
+(( f, ...args )=> f( f, ...args, ) )( ( f, i, arr, p, interval, )=>{
+	p.push( arr[i] )
+	if( ++i < arr.length )
+		setTimeout( ()=> f( f, i, arr, p, interval, ), interval, );
+}, 0, planetsData, planets, 250, );
+
 
 (( f, ...args )=> f( f, ...args, ) )( ( f, i, str, p, interval, )=>{
 	p.value= str.slice( 0, i ) + '.';
@@ -89,28 +99,19 @@ export default new Page( {
 						),
 					),
 					tbody(
-						tr(
-							td( 1, ),
-							td( 'Mercury', ),
-							td( 0.06, ),
-							td( 0.382, ),
-							td( 0.39, ),
-							td( 0.24, ),
-							td( 0.206, ),
-							td( 58.64, ),
-							td( 0, ),
-						),
-						tr(
-							td( 2, ),
-							td( 'Venus', ),
-							td( 0.82, ),
-							td( 0.949, ),
-							td( 0.72, ),
-							td( 0.62, ),
-							td( 0.007, ),
-							td( -243.02, ),
-							td( 0, ),
-						),
+						ForEach( planets, planet=>[
+							tr(
+								td( planet.id, ),
+								td( planet.name, ),
+								td( planet.mass, ),
+								td( planet.diameter, ),
+								td( planet.semi_major_axis, ),
+								td( planet.orbital_period, ),
+								td( planet.orbital_eccentricity, ),
+								td( planet.rotation_period, ),
+								td( planet.moons, ),
+							),
+						], ),
 					),
 				),
 			),
