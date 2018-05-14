@@ -6,6 +6,7 @@ body
 	background-color: var(--body-bgc);
 	color: var(--fgc);
 	font-family: sans-serif;
+	transition: background 400ms, color 200ms;
 }
 
 body>header>nav>a
@@ -44,6 +45,7 @@ body>main>article
 	background-color: var(--section-bgc);
 	box-shadow: 0 0.1em 0.5em hsla(0,0%,0%,0.2);
 	border-top-left-radius: 1.5em;
+	transition: background-color 200ms, box-shadow 400ms;
 }
 
 
@@ -64,6 +66,7 @@ body>main>table
 {
 	background-color: var(--section-bgc);
 	box-shadow: 0 0.1em 0.5em hsla(0,0%,0%,0.2);
+	transition: background-color 200ms, box-shadow 400ms;
 }
 
 body>main>table>caption
@@ -75,6 +78,12 @@ body>main>table>caption
 body>main>table>thead
 {
 	color: var(--fgc);
+	transition: background-color 200ms, color 200ms;
+}
+
+body>main>table>*>tr
+{
+	transition: background-color 200ms;
 }
 
 body>main>form>fieldset
@@ -86,6 +95,7 @@ body>main>form>fieldset
 	,
 		0 0 0 0.5em hsla(0,0%,100%,0.5)
 	;
+	transition: background-color 200ms, box-shadow 400ms;
 }
 
 body>main>form>fieldset>legend
@@ -100,6 +110,7 @@ body>main>form>fieldset>legend
 	;
 	border-radius: 4em;
 	border-color: transparent;
+	transition: background-color 200ms;
 }
 
 body>main>form>fieldset input

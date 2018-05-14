@@ -1,6 +1,6 @@
 body
 {
-	--body-bgc: hsl(205, 100%, 80%);
+	--body-bgc: hsla(205,100%,80%,1);
 	--section-bgc: hsla(205,0%,100%,1);
 	--fgc: hsla(0,0%,30%,1);
 }
