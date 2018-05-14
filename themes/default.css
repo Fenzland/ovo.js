@@ -2,17 +2,29 @@ body
 {
 	--body-bgc: hsla(0,0%,93%,1);
 	--section-bgc: hsla(0,0%,100%,1);
+	--fgc: hsla(0,0%,30%,1);
 	background-image: linear-gradient( 180deg, hsla(0,0%,100%,0.75), transparent 10em );
 }
 
 body>main>table>thead
 {
+	--fgc: hsla(0,0%,100%,1);
 	background-color: hsla(0,0%,40%,1);
-	color: hsla(0,0%,100%,1);
 	box-shadow: 0 0.1em 0.5em hsla(0,0%,0%,0.2);
 }
 
 body>main>table>tbody>tr:nth-child(even)
 {
 	background-color: hsla(0,0%,95%,1);
+}
+
+button:focus
+{
+	background-color: hsla(0,0%,100%,1);
+}
+
+button:hover
+{
+	background-color: hsla(0,0%,100%,1);
+	box-shadow: 0 0.1em 0.2em hsla(0,0%,0%,0.2);
 }

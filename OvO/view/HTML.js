@@ -71,6 +71,9 @@ export const input= {
 	select:   ( ...args )=> create( 'select', ...args, ),
 };
 
+export const button= ( ...args )=> create( 'button', ...args, { type:'button', }, );
+button.submit= ( ...args )=> create( 'button', ...args, { type:'submit', }, );
+
 export default new Proxy( {}, {
 	
 	get( target, key, receiver, )

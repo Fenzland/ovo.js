@@ -11,6 +11,7 @@ const UPDATE= Symbol( 'update', );
 const TEMPLATE= Symbol( 'template', );
 const MAKE_ROW= Symbol( 'make_row', );
 const DOCUMENT= Symbol( 'document', );
+const ROW_CACHE= Symbol( 'row_cache', );
 
 export default class Ctrl
 {
@@ -123,6 +124,7 @@ class ForEachCtrl extends Ctrl
 		model.listenedBy( ( i, model, )=> this[UPDATE]( i, model, ), );
 		
 		this[TEMPLATE]= template;
+		this[ROW_CACHE]= new WeakMap;
 	}
 	
 	toHTML()
@@ -151,7 +153,16 @@ class ForEachCtrl extends Ctrl
 	
 	[MAKE_ROW]( x, )
 	{
-		return VDOM.create( '', this[TEMPLATE]( x, ), ).children;
+		let row= this[ROW_CACHE].get( x, );
+		
+		if(!( row ))
+		{
+			row= VDOM.create( '', this[TEMPLATE]( x, ), ).children;
+			
+			this[ROW_CACHE].set( x, row, );
+		}
+		
+		return row;
 	}
 	
 	[UPDATE]( i, model, )
@@ -168,7 +179,7 @@ class ForEachCtrl extends Ctrl
 			this[ACTIVED_DOMS].splice( i, 0, doms, );
 		}
 		else
-			this[ACTIVED_DOMS].splice( i, 1, ).forEach( x=> x.remove(), );
+			this[ACTIVED_DOMS].splice( i, 1, )[0].forEach( x=> x.remove(), );
 	}
 }
 

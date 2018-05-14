@@ -4,12 +4,14 @@ const LISTENERS= Symbol( 'listeners', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
 const IS_ARRAY= Symbol( 'is_array', );
-const ASSIGN_TO= Symbol( 'assign_to', );
+const EMIT= Symbol( 'emit', );
 
 export default class Model
 {
 	constructor( value, )
 	{
+		if( value instanceof Model ) return value;
+		
 		this[CHILDREN]= {};
 		this[LISTENERS]= [];
 		this[ORIGIN]= this;
@@ -97,6 +99,20 @@ export default class Model
 		return `${this[ORIGIN][VALUE]}`;
 	}
 	
+	[Symbol.toPrimitive]( hint, )
+	{
+		switch( hint )
+		{
+			case "number":
+				return +this[ORIGIN][VALUE];
+			case "string":
+				return this.toString();
+			case "default":
+			default:
+				return this[ORIGIN][VALUE];
+		}
+	}
+	
 	listenedBy( listener, )
 	{
 		this[ORIGIN][LISTENERS].push( listener, );
@@ -141,6 +157,11 @@ export class ArrayModel extends Model
 		return this[ORIGIN][CHILDREN].concat().map( ...args, );
 	}
 	
+	forEach( ...args )
+	{
+		return this[ORIGIN][CHILDREN].concat().forEach( ...args, );
+	}
+	
 	reduce( ...args )
 	{
 		return this[ORIGIN][CHILDREN].concat().reduce( ...args, );
@@ -148,7 +169,70 @@ export class ArrayModel extends Model
 	
 	push( ...children )
 	{
-		this[SET_VALUE]( this[ORIGIN][CHILDREN].concat( children, ), );
+		this[ORIGIN][CHILDREN].push( ...children.map( x=> this[EMIT]( this[ORIGIN][CHILDREN].length, new Model( x, ), ), ), );
+	}
+	
+	unshift( ...children )
+	{
+		this[ORIGIN][CHILDREN].unshift( ...children.map( (x)=> this[EMIT]( 0, new Model( x, ), ), ), );
+	}
+	
+	pop()
+	{
+		this[EMIT]( this[ORIGIN][CHILDREN].length - 1, null, );
+		
+		return this[ORIGIN][CHILDREN].pop();
+	}
+	
+	shift()
+	{
+		this[EMIT]( 0, null, );
+		
+		return this[ORIGIN][CHILDREN].shift();
+	}
+	
+	splice( start, count, ...inserted )
+	{
+		let removed= []
+		
+		if( count > 0 )
+		{
+			removed= this[ORIGIN][CHILDREN].splice( start, count, );
+			
+			removed.forEach( x=> this[EMIT]( start, null, ), );
+		}
+		
+		this[ORIGIN][CHILDREN].splice( start, 0, ...inserted.map( ( x, i, )=> this[EMIT]( start- -i, new Model( x, ), ), ), );
+		
+		return removed;
+	}
+	
+	reverse()
+	{
+		for( let l= this[ORIGIN][CHILDREN].length, i= 0; i < l; ++i )
+			this.splice( i, 0, this.pop(), );
+		
+		return this;
+	}
+	
+	sort( comparer, )
+	{
+		this[SET_VALUE]( this[ORIGIN][CHILDREN].concat().sort( comparer, ), );
+	}
+	
+	remove( ...children )
+	{
+		children.forEach( x=> {
+			const index= this[ORIGIN][CHILDREN].indexOf( x, );
+			
+			if( index >= 0 )
+				this.splice( index, 1, );
+		} );
+	}
+	
+	get length()
+	{
+		return this[ORIGIN][CHILDREN].length;
 	}
 	
 	[SET_VALUE]( value, )
@@ -156,30 +240,31 @@ export class ArrayModel extends Model
 		if(!( Array.isArray( value, ) ))
 			throw 'The value of ArrayModel must be as array.';
 		
-		const CALL= ( index, model, )=> {
-			this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, ), );
-			
-			return model;
-		}
-		
 		let i= 0, j= 0, k= 0;
 		while( i < this[ORIGIN][CHILDREN].length )
 			if( j >= value.length )
-				this[ORIGIN][CHILDREN].splice( i, ).forEach( ()=> CALL( i, null, ), );
+				this[ORIGIN][CHILDREN].splice( i, ).forEach( ()=> this[EMIT]( i, null, ), );
 			else
 			if( this[ORIGIN][CHILDREN][i] === value[j] )
 				++i, ++j;
 			else
 			if( 0 <= (k= value.indexOf( this[ORIGIN][CHILDREN][i], j, )) )
 			{
-				this[ORIGIN][CHILDREN].splice( i, 0, ...value.slice( j, k, ).map( ( x, ii, )=> CALL( i- -ii, new Model( x, ), ), ), );
+				this[ORIGIN][CHILDREN].splice( i, 0, ...value.slice( j, k, ).map( ( x, ii, )=> this[EMIT]( i- -ii, new Model( x, ), ), ), );
 				i-= j - 1 - k;
 				j= k - - 1;
 			}
 			else
-				this[ORIGIN][CHILDREN].splice( i, 1, ),  CALL( i, null, );
+				this[ORIGIN][CHILDREN].splice( i, 1, ),  this[EMIT]( i, null, );
 		if( j < value.length )
-			this[ORIGIN][CHILDREN].splice( i, 0, ...value.slice( j, ).map( ( x, ii )=> CALL( i- -ii, new Model( x, ), ), ), );
+			this[ORIGIN][CHILDREN].push( ...value.slice( j, ).map( ( x, ii )=> this[EMIT]( i- -ii, new Model( x, ), ), ), );
+	}
+	
+	[EMIT]( index, model, )
+	{
+		this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, ), );
+		
+		return model;
 	}
 }
 

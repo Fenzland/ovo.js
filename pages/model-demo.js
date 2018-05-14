@@ -2,11 +2,12 @@ import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
 import { If, ForEach } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
-import HTML, { header, main, form, fieldset, legend, label, input, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, } from '../OvO/view/HTML.js';
-import Pointer from '../OvO/support/Pointer.js';
+import HTML, { header, main, form, fieldset, legend, label, input, button, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, } from '../OvO/view/HTML.js';
+import wait from '../OvO/support/wait.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
-import planetsData from './planets.data.js';
+import $sorter from './sorter.component.js';
+import planetsData, { fields, } from './planets.data.js';
 
 const m= new Model( {
 	title: '',
@@ -15,22 +16,16 @@ const m= new Model( {
 	repeating: '',
 }, );
 
-const planets= new Model( [], );
+const planets= new Model( planetsData, );
 
-(( f, ...args )=> f( f, ...args, ) )( ( f, i, arr, p, interval, )=>{
-	p.push( arr[i] )
-	if( ++i < arr.length )
-		setTimeout( ()=> f( f, i, arr, p, interval, ), interval, );
-}, 0, planetsData, planets, 250, );
-
-
-(( f, ...args )=> f( f, ...args, ) )( ( f, i, str, p, interval, )=>{
-	p.value= str.slice( 0, i ) + '.';
-	if( i < str.length )
-		setTimeout( ()=> f( f, ++i, str, p, interval, ), interval, );
-	else
-		p.value= str + '.';
-}, 0, 'OvO view model demo',new Pointer( m, 'title', ), 250, );
+(async ( str, interval, )=> {
+	for( let i= 0; i <= str.length; ++i )
+	{
+		await wait( interval, );
+		
+		m.title= str.slice( 0, i, ) + '.';
+	}
+})( 'OvO view model demo', 250, );
 
 export default new Page( {
 	name: 'view-model',
@@ -87,29 +82,27 @@ export default new Page( {
 					caption( 'Planets', ),
 					thead(
 						tr(
-							th( 'id', ),
-							th( 'name', ),
-							th( 'mass', ),
-							th( 'diameter', ),
-							th( 'semi-major axis', ),
-							th( 'orbital period', ),
-							th( 'orbital eccentricity', ),
-							th( 'rotation period', ),
-							th( 'moons', ),
+							fields.map( field=> [
+								th(
+									field.label,
+									$sorter( planets, field.name, ),
+								),
+							], ),
+							th( 'actions', ),
 						),
 					),
 					tbody(
-						ForEach( planets, planet=>[
+						ForEach( planets, planet=> [
 							tr(
-								td( planet.id, ),
-								td( planet.name, ),
-								td( planet.mass, ),
-								td( planet.diameter, ),
-								td( planet.semi_major_axis, ),
-								td( planet.orbital_period, ),
-								td( planet.orbital_eccentricity, ),
-								td( planet.rotation_period, ),
-								td( planet.moons, ),
+								fields.map( field=> [
+									td( planet[field.name], ),
+								] ),
+								td(
+									button(
+										new Listener( 'click', e=> planets.remove( planet, ), ),
+										'remove',
+									),
+								),
 							),
 						], ),
 					),

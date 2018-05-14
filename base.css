@@ -69,6 +69,10 @@ input, textarea, select, button
 { font:inherit; border-style:solid; border-width:1px; border-color:grey; padding:0.25em; }
 
 
+button
+{ cursor:pointer; }
+
+
 code
 { font-family:monospace; }
 

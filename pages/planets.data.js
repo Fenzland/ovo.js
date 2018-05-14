@@ -1,3 +1,15 @@
+export const fields= [
+	{ "name": "id",                   "label": "id",                   },
+	{ "name": "name",                 "label": "name",                 },
+	{ "name": "mass",                 "label": "mass",                 },
+	{ "name": "diameter",             "label": "diameter",             },
+	{ "name": "semi_major_axis",      "label": "semi-major axis",      },
+	{ "name": "orbital_period",       "label": "orbital period",       },
+	{ "name": "orbital_eccentricity", "label": "orbital eccentricity", },
+	{ "name": "rotation_period",      "label": "rotation period",      },
+	{ "name": "moons",                "label": "moons",                },
+];
+
 export default [
 	{ "id": "1", "name": "Mercury", "mass": "0.06",  "diameter": "0.382",  "semi_major_axis": "0.39",   "orbital_period": "0.24",  "orbital_eccentricity": "0.206", "rotation_period": "58.64",   "moons": "0",  },
 	{ "id": "2", "name": "Venus",   "mass": "0.82",  "diameter": "0.949",  "semi_major_axis": "0.72",   "orbital_period": "0.62",  "orbital_eccentricity": "0.007", "rotation_period": "-243.02", "moons": "0",  },
