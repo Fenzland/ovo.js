@@ -30,7 +30,7 @@ export default function sorter( array, field, )
 					`,
 					tabindex: -1,
 				},
-				new Listener( 'click', e=> array.sort( ( x, y, )=> x[field] - y[field], ), ),
+				new Listener( 'click', e=> array.sort( ( x, y, )=> compare( x[field], y[field], ), ), ),
 			),
 			HTML.button(
 				{
@@ -47,9 +47,25 @@ export default function sorter( array, field, )
 					`,
 					tabindex: -1,
 				},
-				new Listener( 'click', e=> array.sort( ( x, y, )=> y[field] - x[field], ), ),
+				new Listener( 'click', e=> array.sort( ( x, y, )=> compare( y[field], x[field], ), ), ),
 			),
 		),
 		' ',
 	];
+}
+
+function compare( x, y, )
+{
+	if( isNaN( x, ) || isNaN( y, ) )
+	{
+		return (
+			`${x}`>`${y}` ? 1 :
+			`${x}`<`${y}` ? -1 :
+			0
+		);
+	}
+	else
+	{
+		return x - y;
+	}
 }
