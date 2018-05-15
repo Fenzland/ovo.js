@@ -1,9 +1,8 @@
+import Component from '../OvO/view/Component.js';
 import HTML from '../OvO/view/HTML.js';
 import Listener from '../OvO/view/Listener.js';
 
-// TODO new Component() and use Web Standard Component.
-export default function sorter( array, field, )
-{
+export default new Component( 'table-sorter', ( array, field, )=> {
 	return [
 		' ',
 		HTML.div(
@@ -52,7 +51,7 @@ export default function sorter( array, field, )
 		),
 		' ',
 	];
-}
+}, );
 
 function compare( x, y, )
 {
