@@ -1,0 +1,29 @@
+OvO PAGE
+
+-title
+	Home - OvO
+-css @../layouts/home.css.js
+-header
+	-div .logo
+		-svg(0,0,512,256)
+			-path(M 128 128 h 96 l 32 32 l 32 -32 h 96 l -128 128 z) {fill=hsla(0,80%,75%,1);}
+			-circle(128,128,96) {fill=hsla(0,100%,80%,1);}
+			-circle(384,128,96) {fill=hsla(0,100%,80%,1);}
+	-ovo:widget @../navs.widget.js
+-main
+	-article
+		-ovo:import <summary> @../introduce.js
+		-footer
+			-a @(linkTo('introduce'))
+				>>> Read More
+	-article
+		-h1
+			Model
+		-ovo:import <summary> @../model.js
+		-footer
+			-a @(linkTo('model'))
+				>>> Read More
+			`&ensp;
+			-a @(linkTo('model-demo'))
+				Demo
+-ovo:widget @../footer.widget.js

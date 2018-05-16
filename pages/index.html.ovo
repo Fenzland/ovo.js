@@ -1,0 +1,37 @@
+<!DOCTYPE OvO PAGE>
+
+<title>Home - OvO</title>
+<ovo:style-import src="../layouts/home.css.js" />
+<header>
+	<div class="logo"></div>
+	<svg viewBox="0,0,512,256">
+		<path d="M 128 128 h 96 l 32 32 l 32 -32 h 96 l -128 128 z" fill="hsla(0,80%,75%,1)" />
+		<circle cx="128" cy="128" r="96" fill="hsla(0,100%,80%,1)" />
+		<circle cx="384" cy="128" r="96" fill="hsla(0,100%,80%,1)" />
+	</svg>
+	<ovo:widget src="../navs.widget.js" />
+</header>
+<main>
+	<article>
+		<ovo:import src="../introduce.js" import="summary" />
+		<footer>
+			<a ovo:router-link="introduce">
+				>>> Read More
+			</a>
+		</footer>
+	</article>
+	<article>
+		<h1>Model</h1>
+		<ovo:import src="../model.js" import="summary" />
+		<footer>
+			<a router-link:href="model">
+				>>> Read More
+			</a>
+			&ensp;
+			<a router-link:href="model-demo">
+				>>> Demo
+			</a>
+		</footer>
+	</article>
+</main>
+<ovo:widget src="../footer.widget.js" />
