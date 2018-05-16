@@ -1,4 +1,5 @@
 import File from './File.mjs';
+import path from 'path';
 
 const map= {};
 
@@ -24,33 +25,11 @@ function find( file, )
 	
 	if(!( matches )) return [];
 	
-	const files= matches[0].match( /'([^']+)';/g, ).map( x=> new File( referenceTo( x.slice( 1, -2, ), file.path, ), ), );
+	const files= matches[0].match( /'([^']+)';/g, ).map( x=> (
+		new File(
+			path.resolve( path.dirname( file.path, ), x.slice( 1, -2, ), ),
+		)
+	), );
 	
 	return files.concat( ...files.map( x=> find( x, ), ), );
-}
-
-function referenceTo( path, base, )
-{
-	path= path.split( '/', );
-	base= base.split( '/', );
-	
-	base.pop();
-	
-	while( true )
-		if( path[0]==='..' )
-			base.pop(), path.shift();
-		else
-		if( path[0]==='.' )
-			path.shift();
-		else
-			break;
-	
-	return base.concat( path, ).join( '/', );
-}
-
-function z( x, ...o )
-{
-	console.log( x, ...o, );
-	
-	return x;
 }
