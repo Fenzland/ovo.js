@@ -9,6 +9,7 @@ const CHILDREN= Symbol( 'children', );
 const ATTRIBUTES= Symbol( 'attributes', );
 const LISTENERS= Symbol( 'listeners', );
 const APPEND_LISTENER= Symbol( 'append_listener', );
+const DOM_PROCESSOR= Symbol( 'dom_processor', );
 const EMPTY= Symbol( 'empty', );
 const DOM= Symbol( 'dom', );
 
@@ -82,6 +83,11 @@ export default class VDOM
 		return this[ATTRIBUTES].get( attr, );
 	}
 	
+	addDOMProcessor( processor, )
+	{
+		this[DOM_PROCESSOR]= processor;
+	}
+	
 	addListener( eventName, callback, )
 	{
 		this[APPEND_LISTENER]( new Listener( eventName, callback, ), )
@@ -131,6 +137,8 @@ export default class VDOM
 			for( let childDom of child.toDOM( document, ) )
 				dom.appendChild( childDom, );
 		
+		if( this[DOM_PROCESSOR] )
+			this[DOM_PROCESSOR]( dom, );
 		
 		return [ dom, ];
 	}

@@ -1,27 +1,43 @@
+import { create, forEach, } from './VDOM.js'
+import { escapeFree as ef, } from './TextNode.js'
 // import customElements from 'customElements';
 
+const NAME= Symbol( 'name', );
 const TEMPLATE= Symbol( 'template', );
 const MAKE_ELEMENT_CLASS= Symbol( 'make_element_class', );
 const ELEMENT_CLASS= Symbol( 'element_class', );
+const SHADOW= Symbol( 'shadow', );
+const SET_VSHADOW= Symbol( 'set_vshadow', );
 
 export default class Component extends Function
 {
-	constructor( name, template, )
+	constructor( { name, template, styles, isEmpty, } )
 	{
+		super();
+		
 		Component.checkName( name, true, );
 		
 		if( Component.exists( name, ) )
 			throw `Component named "${name}" is already defineed.`;
 		
+		this[NAME]= name;
 		this[TEMPLATE]= template;
 		
-		customElements.define( name, this.elementClass )
+		customElements.define( name, this.elementClass );
 		
 		return new Proxy( this, {
 			
-			apply( ...args )
+			apply( target, context, args, )
 			{
-				;
+				const vShadow= template( ...args, );
+				const vdom= create( name, );
+				
+				vdom.addDOMProcessor( dom=> dom[SET_VSHADOW]( create( 'style', ef( styles, ), ), vShadow, ), );
+				
+				if( isEmpty )
+					vdom.empty();
+				
+				return vdom;
 			}
 			
 		}, );
@@ -30,23 +46,29 @@ export default class Component extends Function
 	get elementClass()
 	{
 		return this[ELEMENT_CLASS] || (
-			this[ELEMENT_CLASS]= this[MAKE_ELEMENT_CLASS]
-		)
+			this[ELEMENT_CLASS]= this[MAKE_ELEMENT_CLASS]()
+		);
 	}
 	
 	[MAKE_ELEMENT_CLASS]()
 	{
-		const component= this;
-		
-		return class extends HTML
+		return class extends HTMLElement
 		{
 			constructor()
 			{
 				super();
 				
-				const shadow= this.attachShadow( { mode: 'open', }, );
-				const vdom= component[TEMPLATE]
-				component
+				this[SHADOW]= this.attachShadow( { mode: 'open', }, );
+			}
+			
+			[SET_VSHADOW]( ...vdoms )
+			{
+				forEach(
+					vdoms,
+					x=> x.toDOM( document, ).forEach(
+						x=> this[SHADOW].appendChild( x, ),
+					),
+				);
 			}
 		}
 	}
