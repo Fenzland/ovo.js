@@ -1,7 +1,7 @@
 const CONTAINER= Symbol( 'container', );
 const INSERT= Symbol( 'insert', );
 
-import { create, diff, } from './VDOM.js'
+import { create, forEach, diff, } from './VDOM.js'
 
 export default class View
 {
@@ -20,35 +20,22 @@ export default class View
 		
 		this[CONTAINER].innerHTML= '';
 		
-		if( Array.isArray( vdoms, ) ){
-			const container= create( this[CONTAINER].tagName, ...vdoms );
-			
-			container.children.forEach( x=> this[INSERT]( x.toDOM( document, ), ), );
-		}
-		else
-		{
-			this[INSERT]( vdoms.toDOM( document, ), );
-		}
+		forEach(
+			vdoms,
+			x=> x.toDOM( document, ).forEach(
+				x=> this[CONTAINER].appendChild( x, ),
+			),
+		);
 		
 		/*/
 		
 		let html= '';
-		if( Array.isArray( vdoms, ) )
-			for( let vdom of vdoms )
-				html+= vdom.toHTML();
-		else
-			html+= vdoms.toHTML();
+		
+		forEach( vdoms, x=> html+= x.toHTML(), );
+		
 		this[CONTAINER].innerHTML= html;
 		
 		//*/
-	}
-	
-	[INSERT]( doms, )
-	{
-		if( Array.isArray( doms, ) )
-			doms.forEach( x=> this[CONTAINER].appendChild( x, ), );
-		else
-			this[CONTAINER].appendChild( doms, );
 	}
 	
 	loading()

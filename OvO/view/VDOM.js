@@ -128,17 +128,11 @@ export default class VDOM
 			listener.listenTo( dom, );
 		
 		for( let child of this[CHILDREN] )
-		{
-			const childDoms= child.toDOM( document, );
-			
-			if( Array.isArray( childDoms, ) )
-				for( let childDom of childDoms )
-					dom.appendChild( childDom, );
-			else
-				dom.appendChild( childDoms, );
-		}
+			for( let childDom of child.toDOM( document, ) )
+				dom.appendChild( childDom, );
 		
-		return dom;
+		
+		return [ dom, ];
 	}
 	
 	empty()
@@ -168,6 +162,14 @@ export default class VDOM
 		return new VDOM( name, namespace, ).fill( ...args, );
 	}
 	
+	static forEach( vdoms, callback, )
+	{
+		if( Array.isArray( vdoms, ) )
+			VDOM.create( '', ...vdoms ).children.forEach( x=> callback( x, ), );
+		else
+			callback( vdoms, );
+	}
+	
 	static diff( x, y, )
 	{
 		
@@ -176,4 +178,5 @@ export default class VDOM
 
 export const create= VDOM.create;
 export const createNS= VDOM.createNS;
+export const forEach= VDOM.forEach;
 export const diff= VDOM.diff;

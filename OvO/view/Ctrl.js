@@ -75,7 +75,7 @@ class IfCtrl extends Ctrl
 		if( this[DOMS][value] )
 			return this[DOMS][value];
 		else
-			return this[DOMS][value]= this[VDOMS][value].map( x=> x.toDOM( document, ), );
+			return this[DOMS][value]= this[VDOMS][value].map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
 		
 	}
 	
@@ -139,7 +139,7 @@ class ForEachCtrl extends Ctrl
 		this[DOCUMENT]= document;
 		this[ACTIVED_DOMS]= this[MODEL].map(
 			x=> {
-				const doms= this[MAKE_ROW]( x, ).map( x=> x.toDOM( document, ), );
+				const doms= this[MAKE_ROW]( x, ).map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
 				
 				if(!( doms.length ))
 					doms.push( new TextNode( '', ), );
@@ -172,7 +172,7 @@ class ForEachCtrl extends Ctrl
 		if( model )
 		{
 			const vdoms= this[MAKE_ROW]( model, );
-			const doms= vdoms.map( x=> x.toDOM( this[DOCUMENT], ), )
+			const doms= vdoms.map( x=> x.toDOM( this[DOCUMENT], ), ).reduce( ( x, y, )=> x.concat( y, ), [], )
 			
 			this[ACTIVED_DOMS][i][0].before( ...doms, );
 			

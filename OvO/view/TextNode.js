@@ -40,7 +40,7 @@ export default class TextNode
 	
 	toDOM( document, )
 	{
-		return this[DOM]= new Text( this.toString(), );
+		return [ this[DOM]= new Text( this.toString(), ), ];
 	}
 	
 	toString()
