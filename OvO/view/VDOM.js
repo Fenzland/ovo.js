@@ -8,6 +8,7 @@ const NAMESPACE= Symbol( 'namespace', );
 const CHILDREN= Symbol( 'children', );
 const ATTRIBUTES= Symbol( 'attributes', );
 const LISTENERS= Symbol( 'listeners', );
+const SET_ATTRIBUTE= Symbol( 'set_attribute', );
 const APPEND_LISTENER= Symbol( 'append_listener', );
 const DOM_PROCESSOR= Symbol( 'dom_processor', );
 const EMPTY= Symbol( 'empty', );
@@ -50,7 +51,7 @@ export default class VDOM
 				this.appendChild( new TextNode( arg, ), );
 			else
 			// Model: treat as a String
-			if( arg && arg.constructor === Model )
+			if( arg instanceof Model )
 				this.appendChild( new TextNode( arg, ), );
 			else
 			// other: convert to a String
@@ -72,10 +73,13 @@ export default class VDOM
 	
 	setAttribute( attr, value=undefined, )
 	{
-		if( value === undefined )
-			value= attr;
-		
-		this[ATTRIBUTES].set( attr, value, );
+		if( value instanceof Model )
+		{
+			this[SET_ATTRIBUTE]( attr, value.valueOf(), );
+			value.listenedBy( v=> this[SET_ATTRIBUTE]( attr, v, ), );
+		}
+		else
+			this[SET_ATTRIBUTE]( attr, value, );
 	}
 	
 	getAttribute( attr, )
@@ -91,6 +95,17 @@ export default class VDOM
 	addListener( eventName, callback, )
 	{
 		this[APPEND_LISTENER]( new Listener( eventName, callback, ), )
+	}
+	
+	[SET_ATTRIBUTE]( attr, value, )
+	{
+		if( value === undefined )
+			value= attr;
+		
+		this[ATTRIBUTES].set( attr, value, );
+		
+		if( this[DOM] )
+			this[DOM].setAttribute( attr, value, );
 	}
 	
 	[APPEND_LISTENER]( listener, )
