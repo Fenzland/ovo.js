@@ -9,29 +9,30 @@ import $footer from './footer.widget.js';
 import $sorter from './sorter.component.js';
 import planetsData, { fields, } from './planets.data.js';
 
-const m= new Model( {
-	title: '',
-	username: '',
-	password: '',
-	repeating: '',
-}, );
-
-const planets= new Model( planetsData, );
-
-(async ( str, interval, )=> {
-	for( let i= 0; i <= str.length; ++i )
-	{
-		await wait( interval, );
-		
-		m.title= str.slice( 0, i, ) + '.';
-	}
-})( 'OvO view model demo', 250, );
 
 export default new Page( {
 	name: 'view-model',
 	
 	render()
 	{
+		const m= new Model( {
+			title: '',
+			username: '',
+			password: '',
+			repeating: '',
+		}, );
+
+		const planets= new Model( planetsData, );
+
+		(async ( str, interval, )=> {
+			for( let i= 0; i <= str.length; ++i )
+			{
+				await wait( interval, );
+				
+				m.title= str.slice( 0, i, ) + '.';
+			}
+		})( 'OvO view model demo', 250, );
+		
 		return [
 			header(
 				h1( m.title, { style:'font-family:monospace;', } ),
@@ -56,6 +57,7 @@ export default new Page( {
 								dd(
 									input.password(
 										new Listener( 'input', e=> m.password=e.target.value ),
+										{ placeholder: m.username.express( x=> x?`Password of ${x}`:'', ), },
 									),
 									m.password.express( x=> checkPassword( x, ), ),
 								),
