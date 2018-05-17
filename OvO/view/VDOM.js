@@ -71,7 +71,7 @@ export default class VDOM
 		this[NAMESPACE]= namespace;
 	}
 	
-	setAttribute( attr, value=undefined, )
+	setAttribute( attr, value=true, )
 	{
 		if( value instanceof Model )
 		{
@@ -97,15 +97,18 @@ export default class VDOM
 		this[APPEND_LISTENER]( new Listener( eventName, callback, ), )
 	}
 	
-	[SET_ATTRIBUTE]( attr, value, )
+	[SET_ATTRIBUTE]( attr, value=true, )
 	{
-		if( value === undefined )
+		if( value === true )
 			value= attr;
 		
 		this[ATTRIBUTES].set( attr, value, );
 		
 		if( this[DOM] )
-			this[DOM].setAttribute( attr, value, );
+			if( value === false )
+				this[DOM].removeAttribute( attr, );
+			else
+				this[DOM].setAttribute( attr, value, );
 	}
 	
 	[APPEND_LISTENER]( listener, )
