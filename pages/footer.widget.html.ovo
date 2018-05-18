@@ -1,0 +1,22 @@
+<!DOCTYPE OvO WIDGET>
+
+<ovo:import-as src="../themeSwitcher.js">
+	<ovo:import-item name="themes"></ovo:import-item>
+	<ovo:import-item name="switchTheme"></ovo:import-item>
+</ovo:import-as>
+<footer>
+	&copy;
+	 Fenz (
+	<a href="mailto:uukoo@163.com">
+		uukoo@163.com
+	</a>
+	)
+	&emsp;
+	<ovo:array-map of="themes" item="theme">
+		&ensp;
+		<button
+			style="background-color:${theme.color}; border-color:hsla(0,0%,100%,1); width:1em; height:1em; vertical-align:button;"
+			onclick="switchTheme( theme, );"
+		></button>
+	</ovo:array-map>
+</footer>

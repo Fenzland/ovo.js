@@ -1,0 +1,17 @@
+OvO WIDGET
+
+-ovo:import-as @../themeSwitcher.js
+	-ovo:import-item <themes>
+	-ovo:import-item <switchTheme>
+
+-footer
+	`&copy;
+	-
+	Fenz (
+	-a @mailto:uukoo@163.com
+		uukoo@163.com
+	')',
+	`&emsp;
+	~~for( theme of themes )
+		`&ensp;
+		-button [background-color:${theme.color}; border-color:hsla(0,0%,100%,1); width:1em; height:1em; vertical-align:button;] %click{>switchTheme( theme, );<}

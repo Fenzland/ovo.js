@@ -1,0 +1,4 @@
+<nav>
+	<a ovo:router-link="home">Home</a>
+	<a ovo:router-link="introduce">Introduce</a>
+</nav>

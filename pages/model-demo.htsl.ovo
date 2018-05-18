@@ -1,0 +1,53 @@
+OvO PAGE
+
+-header
+	-h1 [font-family:monospace;]
+		-ovo:text <m.title>
+	-ovo:widget @../navs.widget.js
+),
+-main
+	-form
+		-fieldset
+			-legend
+				Model Binding
+			-dl
+				-label
+					-dt
+						Username
+					-dd
+						-text %input(e,){>m.username=e.target.value;<}
+						-ovo:text <m.username.express( x=> checkUsername( x, ), )>
+				-label
+					-dt
+						Password
+					-dd
+						-password %input(e,){>m.password=e.target.value;<} _(m.username.express(x=>x?`Password of ${x}`:'',))
+						-ovo:text <m.password.express( x=> checkPassword( x, ), )>
+				~~if( m.password )
+					-label
+						-dt
+							Repeat Password', ),
+						-dd
+							-password %input(e,){>m.repeating=e.target.value;<}
+							-ovo:text <checkRepeating(m.password,m.repeating,)>
+	-table
+		-caption
+			Planets
+		-thead
+			-tr
+				~~for( field of fields )
+					-th
+						-ovo:text <field.label>
+						-ovo:component <planets|field.name> @./sorter.component.js
+				-th
+					actions
+		-tbody
+			~~for( planet of planets )
+				-tr
+					~~for( field of fields )
+						-td
+							-ovo:text <planet[field.name]>
+					-td
+						-button %click(e,){>planets.remove( planets, );<}
+							remove
+-ovo:widget @../footer.widget.js

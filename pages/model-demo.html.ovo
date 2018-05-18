@@ -1,0 +1,71 @@
+
+<header>
+	<h1 style="font-family:monospace;">
+		<ovo:text model="m.title" />
+	</h1>
+	<ovo:widget src="../navs.widget.js" />
+</header>
+<main>
+	<form>
+		<fieldset>
+			<legend>Model Binding</legend>
+			<dl>
+				<label>
+					<dt>Username</dt>
+					<dd>
+						<input type="text" ovo:on-ninput="e=>m.username=e.target.value" />
+						<ovo:text model="m.username.express(x=>checkUsername(x,),)" />
+					</dd>
+				</label>
+				<label>
+					<dt>Password</dt>
+					<dd>
+						<input type="password" ovo:on-ninput="e=>m.password=e.target.value" />
+						<ovo:text model="m.password.express(x=>checkUsername(x,),)" />
+					</dd>
+				</label>
+				<ovo:if model="m.password">
+					<label>
+						<dt>Repeat Password</dt>
+						<dd>
+							<input type="password" ovo:on-ninput="e=>m.repeating=e.target.value" />
+							<ovo:text model="checkRepeating(m.password,m.repeating,)" />
+						</dd>
+					</label>
+				</ovo:if>
+			</dl>
+		</fieldset>
+	</form>
+	<table>
+		<caption>Planets</caption>
+		<thead>
+			<tr>
+				<ovo:array-map of="fields" item="field">
+					<th>
+						<ovo:text value="field.label" />
+						<ovo:component>
+							<ovo:component-param value="planets" />
+							<ovo:component-param value="field.name" />
+						</ovo:component>
+					</th>
+					<th>actions</th>
+				</ovo:array-map>
+			</tr>
+		</thead>
+		<tbody>
+			<ovo:for-each model="planets" item="planet">
+				<tr>
+					<ovo:array-map of="fields" item="field">
+						<td>
+							<ovo:text model="planet[field.name]" />
+						</td>
+					</ovo:array-map>
+					<td>
+						<button onclick="planets.remove(planet,)">remove</button>
+					</td>
+				</tr>
+			</ovo:for-each>
+		</tbody>
+	</table>
+</main>
+<ovo:widget src="../footer.widget.js" />
