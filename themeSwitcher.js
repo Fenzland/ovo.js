@@ -1,4 +1,5 @@
 const themeCss= document.getElementById( 'theme-css', );
+const themeMeta= document.querySelector( 'meta[name=theme-color]', );
 
 export const themes= [
 	{ "name": "default",    "label": "Default",    "color": "hsla(0,0%,93%,1)",     "url": "/themes/default.css", },
@@ -12,4 +13,5 @@ export function switchTheme( theme, )
 		throw 'theme not exists';
 	
 	themeCss.href= theme.url;
+	themeMeta.content= theme.color;
 }
