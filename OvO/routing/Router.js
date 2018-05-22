@@ -2,7 +2,10 @@ import Route from './Route.js';
 import Link from './Link.js';
 import History, { State, } from './History.js';
 import View from '../view/View.js';
+import { resolve, } from '../support/path.js';
 
+const BASE_PATH= Symbol( 'base_path', );
+const PAGE_DIR= Symbol( 'page_dir', );
 const HISTORY= Symbol( 'history', );
 const ROUTES= Symbol( 'routes', );
 const WINDOW= Symbol( 'window', );
@@ -16,6 +19,16 @@ export default class Router
 		this[ROUTES]= new Map;
 	}
 	
+	set pageDir( dir, )
+	{
+		this[PAGE_DIR]= dir;
+	}
+	
+	set basePath( path, )
+	{
+		this[BASE_PATH]= path;
+	}
+	
 	/**
 	 * Route a path pattern to a PAGE.
 	 * 
@@ -23,8 +36,13 @@ export default class Router
 	 * @param String pattern
 	 * @param String page
 	 */
-	route( name, pattern, page, )
+	route( name, pattern, page=undefined, )
 	{
+		page= resolve( this[PAGE_DIR], page||name );
+		
+		if( this[BASE_PATH] )
+			pattern= `${this[BASE_PATH]}${pattern}`;
+		
 		this[ROUTES].set( name, new Route( pattern, page, ), );
 	}
 	
