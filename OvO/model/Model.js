@@ -73,6 +73,11 @@ export default class Model
 			);
 		}
 		else
+		if( value instanceof Function )
+		{
+			this[SET_VALUE]( value(), );
+		}
+		else
 		{
 			this[SET_VALUE]( value, );
 		}
@@ -149,7 +154,9 @@ export class ArrayModel extends Model
 {
 	constructor( value, )
 	{
-		super( value, );
+		super( [], );
+		
+		this.setValue( value, );
 	}
 	
 	map( ...args )

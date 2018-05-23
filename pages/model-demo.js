@@ -7,7 +7,7 @@ import wait from '../OvO/support/wait.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
 import $sorter from './sorter.component.js';
-import planetsData, { fields, } from './planets.data.js';
+import Planet from '../resources/Planet.js';
 
 
 export default new Page( {
@@ -21,9 +21,9 @@ export default new Page( {
 			password: '',
 			repeating: '',
 		}, );
-
-		const planets= new Model( planetsData, );
-
+		
+		const planets= Planet.query();
+		
 		(async ( str, interval, )=> {
 			for( let i= 0; i <= str.length; ++i )
 			{
@@ -84,10 +84,10 @@ export default new Page( {
 					caption( 'Planets', ),
 					thead(
 						tr(
-							fields.map( field=> [
+							Planet.fields.map( ( [ name, field, ], )=> [
 								th(
 									field.label,
-									$sorter( planets, field.name, ),
+									$sorter( planets, name, ),
 								),
 							], ),
 							th( 'actions', ),
@@ -96,8 +96,8 @@ export default new Page( {
 					tbody(
 						ForEach( planets, planet=> [
 							tr(
-								fields.map( field=> [
-									td( planet[field.name], ),
+								Planet.fields.map( ( [ name, field, ], )=> [
+									td( planet[name], ),
 								] ),
 								td(
 									button(
