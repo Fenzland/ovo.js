@@ -31,7 +31,7 @@ export default new Widget( {
 							vertical-align: button;
 						`,
 					},
-					new Listener( 'click', e=> switchTheme( theme, ), )
+					new Listener( 'click', e=> switchTheme( theme.name, ), )
 				),
 			], ),
 		);
