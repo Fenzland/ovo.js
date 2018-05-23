@@ -42,6 +42,11 @@ export function extname( path, )
 		return `.${ext}`;
 }
 
+export function resolveHere( path, )
+{
+	return resolve( dirname( new URL( pathFromErrorStack(), ).pathname, ), path, );
+}
+
 export function resolve( base, path, )
 {
 	path= path.split( '/', );
