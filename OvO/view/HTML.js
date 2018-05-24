@@ -32,6 +32,7 @@ export const    tbody= ( ...args )=> create(   'tbody', ...args, );
 export const       tr= ( ...args )=> create(      'tr', ...args, );
 export const       th= ( ...args )=> create(      'th', ...args, );
 export const       td= ( ...args )=> create(      'td', ...args, );
+export const      img= ( ...args )=> create(     'img', ...args, );
 
 export const a= ( ...args )=> {
 	const vdom= create( 'a', ...args );

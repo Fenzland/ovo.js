@@ -21,7 +21,7 @@ export default class Planet extends Resource
 	static query()
 	{
 		return this.makeSet(
-			fetch( resolveHere( '../data/planets.json', ), ).then( resp=> resp.json(), )
+			fetch( resolveHere( '../data/planets.json', ), ).then( resp=> resp.json(), ),
 		);
 	}
 }

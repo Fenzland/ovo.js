@@ -1,1 +1,1 @@
-window.z= ( a, ...o )=>(console.log( a, ...o ),a);
+window.z= ( a, ...o )=> (console.log( a, ...o, ) , a);

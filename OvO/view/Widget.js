@@ -27,7 +27,7 @@ export default class Widget
 		const vdoms= this.render();
 		
 		if( Array.isArray( vdoms, ) )
-			return vdoms.map( x=> x.toDOM(), ).reduce( ( x, y, )=> x.concat( y, ), [], );
+			return vdoms.map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
 		else
 			return vdoms.toDOM( document, );
 	}
