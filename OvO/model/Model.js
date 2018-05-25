@@ -4,6 +4,7 @@ const LISTENERS= Symbol( 'listeners', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
 const IS_ARRAY= Symbol( 'is_array', );
+const LENGTH= Symbol( 'length', );
 const EMIT= Symbol( 'emit', );
 
 export default class Model
@@ -161,41 +162,64 @@ export class ArrayModel extends Model
 	
 	map( ...args )
 	{
-		return this[ORIGIN][CHILDREN].concat().map( ...args, );
+		return this[ORIGIN][CHILDREN].map( ...args, );
 	}
 	
 	forEach( ...args )
 	{
-		return this[ORIGIN][CHILDREN].concat().forEach( ...args, );
+		return this[ORIGIN][CHILDREN].forEach( ...args, );
 	}
 	
 	reduce( ...args )
 	{
-		return this[ORIGIN][CHILDREN].concat().reduce( ...args, );
+		return this[ORIGIN][CHILDREN].reduce( ...args, );
+	}
+	
+	entries()
+	{
+		return this[ORIGIN][CHILDREN].entries();
+	}
+	
+	*[Symbol.iterator]()
+	{
+		for( let x of this[ORIGIN][CHILDREN] )
+			yield x;
 	}
 	
 	push( ...children )
 	{
 		this[ORIGIN][CHILDREN].push( ...children.map( x=> this[EMIT]( this[ORIGIN][CHILDREN].length, new Model( x, ), ), ), );
+		
+		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 	}
 	
 	unshift( ...children )
 	{
 		this[ORIGIN][CHILDREN].unshift( ...children.map( (x)=> this[EMIT]( 0, new Model( x, ), ), ), );
+		
+		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 	}
 	
 	pop()
 	{
 		this[EMIT]( this[ORIGIN][CHILDREN].length - 1, null, );
 		
-		return this[ORIGIN][CHILDREN].pop();
+		const poped= this[ORIGIN][CHILDREN].pop();
+		
+		this.length.setValue( this[ORIGIN][CHILDREN].length - 1, );
+		
+		return poped;
 	}
 	
 	shift()
 	{
 		this[EMIT]( 0, null, );
 		
-		return this[ORIGIN][CHILDREN].shift();
+		const shifted= this[ORIGIN][CHILDREN].shift();
+		
+		this.length.setValue( this[ORIGIN][CHILDREN].length, );
+		
+		return shifted;
 	}
 	
 	splice( start, count, ...inserted )
@@ -210,6 +234,8 @@ export class ArrayModel extends Model
 		}
 		
 		this[ORIGIN][CHILDREN].splice( start, 0, ...inserted.map( ( x, i, )=> this[EMIT]( start- -i, new Model( x, ), ), ), );
+		
+		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 		
 		return removed;
 	}
@@ -239,7 +265,7 @@ export class ArrayModel extends Model
 	
 	get length()
 	{
-		return this[ORIGIN][CHILDREN].length;
+		return this[LENGTH]||(this[LENGTH]= new Model( this[ORIGIN][CHILDREN].length, ));
 	}
 	
 	[SET_VALUE]( value, )
@@ -265,11 +291,13 @@ export class ArrayModel extends Model
 				this[ORIGIN][CHILDREN].splice( i, 1, ),  this[EMIT]( i, null, );
 		if( j < value.length )
 			this[ORIGIN][CHILDREN].push( ...value.slice( j, ).map( ( x, ii )=> this[EMIT]( i- -ii, new Model( x, ), ), ), );
+		
+		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 	}
 	
 	[EMIT]( index, model, )
 	{
-		this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, ), );
+		setTimeout( ()=> this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, ), ), );
 		
 		return model;
 	}

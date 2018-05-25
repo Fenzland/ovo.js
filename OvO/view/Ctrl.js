@@ -10,6 +10,9 @@ const GET_DOMS= Symbol( 'get_doms', );
 const UPDATE= Symbol( 'update', );
 const TEMPLATE= Symbol( 'template', );
 const MAKE_ROW= Symbol( 'make_row', );
+const INDEXES= Symbol( 'indexes', );
+const INDEX_OF= Symbol( 'indexes_of', );
+const ARRANGE_INDEXES= Symbol( 'arrange_indexes', );
 const DOCUMENT= Symbol( 'document', );
 const ROW_CACHE= Symbol( 'row_cache', );
 
@@ -120,6 +123,7 @@ class ForEachCtrl extends Ctrl
 			throw 'The template for ForEach must be a Function.';
 		
 		this[MODEL]= model;
+		this[INDEXES]= new WeakMap;
 		
 		model.listenedBy( ( i, model, )=> this[UPDATE]( i, model, ), );
 		
@@ -148,6 +152,8 @@ class ForEachCtrl extends Ctrl
 			},
 		).concat( [ [ new Text( '', ), ], ], );
 		
+		this[ARRANGE_INDEXES]();
+		
 		return this[ACTIVED_DOMS].reduce( ( x, y, )=> x.concat( y, ), [], );
 	}
 	
@@ -157,12 +163,28 @@ class ForEachCtrl extends Ctrl
 		
 		if(!( row ))
 		{
-			row= VDOM.create( '', this[TEMPLATE]( x, ), ).children;
+			row= VDOM.create( '', this[TEMPLATE]( x, this[INDEX_OF]( x, ), ), ).children;
 			
 			this[ROW_CACHE].set( x, row, );
 		}
 		
 		return row;
+	}
+	
+	[INDEX_OF]( x, defaults=0, )
+	{
+		let i= this[INDEXES].get( x, );
+		
+		if(!( i ))
+			this[INDEXES].set( x, i= new Model( defaults, ), );
+		
+		return i;
+	}
+	
+	[ARRANGE_INDEXES]()
+	{
+		for( let [ i, x, ] of this[MODEL].entries() )
+			this[INDEX_OF]( x, ).setValue( i, );
 	}
 	
 	[UPDATE]( i, model, )
@@ -180,6 +202,8 @@ class ForEachCtrl extends Ctrl
 		}
 		else
 			this[ACTIVED_DOMS].splice( i, 1, )[0].forEach( x=> x.remove(), );
+		
+		this[ARRANGE_INDEXES]();
 	}
 }
 

@@ -84,6 +84,7 @@ export default new Page( {
 					caption( 'Planets', ),
 					thead(
 						tr(
+							th( 'index', ),
 							Planet.fields.map( ( [ name, field, ], )=> [
 								th(
 									field.label,
@@ -94,8 +95,9 @@ export default new Page( {
 						),
 					),
 					tbody(
-						ForEach( planets, planet=> [
+						ForEach( planets, ( planet, i, )=> [
 							tr(
+								td( i, ),
 								Planet.fields.map( ( [ name, field, ], )=> [
 									td( planet[name], ),
 								] ),
