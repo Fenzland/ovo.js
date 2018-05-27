@@ -43,7 +43,7 @@ export default class Router
 		if( this[BASE_PATH] )
 			pattern= `${this[BASE_PATH]}${pattern}`;
 		
-		this[ROUTES].set( name, new Route( pattern, page, ), );
+		this[ROUTES].set( name, new Route( name, pattern, page, ), );
 	}
 	
 	/**
@@ -77,7 +77,7 @@ export default class Router
 		const route= this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
 		
 		this[HISTORY].push(
-			new State( window.location.href, ),
+			new State( window.location.href, route.name, ),
 		);
 	}
 	
@@ -108,13 +108,18 @@ export default class Router
 	 */
 	goto( link, )
 	{
-		const state= new State( link.url, );
+		const route= this[DISPATCH]( link.url, '', '', );
+		
+		const state= new State( link.url, route.name, );
 		
 		this.history.push( state, );
 		
 		this[WINDOW].history.pushState( state, '', link.url, );
-		
-		this[DISPATCH]( link.url, '', '', );
+	}
+	
+	match( routeName, index=0, )
+	{
+		return this[HISTORY].match( routeName, index, );
 	}
 	
 	get history()
