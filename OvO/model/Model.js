@@ -61,6 +61,30 @@ export default class Model
 				return true;
 			},
 			
+			has( target, key, )
+			{
+				return key in target[CHILDREN];
+			},
+			
+			deleteProperty( target, key, )
+			{
+				return delete target[CHILDREN][key];
+			},
+			
+			ownKeys( target, )
+			{
+				return Object.keys( target[CHILDREN], );
+			},
+			
+			getOwnPropertyDescriptor( target, key, )
+			{
+				return Object.getOwnPropertyDescriptor( target[CHILDREN], key, );
+			},
+			
+			getOwnPropertyDescriptors( target, )
+			{
+				return Object.getOwnPropertyDescriptors( target[CHILDREN], );
+			},
 		}, );
 	}
 	
