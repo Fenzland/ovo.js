@@ -48,6 +48,12 @@ export default class Model
 			
 			set( target, key, value, receiver, )
 			{
+				if( typeof key === 'symbol' )
+				{
+					target[key]= value;
+					return true;
+				}
+				
 				if( target[CHILDREN][key] )
 					target[CHILDREN][key].setValue( value, );
 				else
