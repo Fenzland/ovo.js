@@ -313,5 +313,5 @@ function setAsArrayModel( model, )
 {
 	Object.setPrototypeOf( model, ArrayModel.prototype, );
 	
-	Object.constructor= ArrayModel;
+	model.constructor= ArrayModel;
 }
