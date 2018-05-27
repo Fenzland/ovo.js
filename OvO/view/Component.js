@@ -38,7 +38,7 @@ export default class Component extends Function
 					vdom.empty();
 				
 				return vdom;
-			}
+			},
 			
 		}, );
 	}

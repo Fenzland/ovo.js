@@ -1,8 +1,10 @@
 import Link from './Link.js';
+import Gate from './Gate.js';
 
 const NAME= Symbol( 'name', );
 const PATTERN= Symbol( 'pattern', );
 const PAGE= Symbol( 'page', );
+const GATES= Symbol( 'gates', );
 
 export default class Route
 {
@@ -16,6 +18,7 @@ export default class Route
 		this[NAME]= name;
 		this[PATTERN]= pattern;
 		this[PAGE]= page;
+		this[GATES]= [];
 	}
 	
 	/**
@@ -28,6 +31,16 @@ export default class Route
 	match( path, )
 	{
 		return path===this[PATTERN];
+	}
+	
+	gatedBy( gate, )
+	{
+		if(!( gate instanceof Gate ))
+			throw 'route must be gated by a gate.'
+		
+		this[GATES].push( gate, );
+		
+		return this;
 	}
 	
 	/**
@@ -51,5 +64,10 @@ export default class Route
 	get page()
 	{
 		return this[PAGE];
+	}
+	
+	get gates()
+	{
+		return this[GATES];
 	}
 }

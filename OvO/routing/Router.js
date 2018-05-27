@@ -10,6 +10,7 @@ const HISTORY= Symbol( 'history', );
 const ROUTES= Symbol( 'routes', );
 const WINDOW= Symbol( 'window', );
 const DISPATCH= Symbol( 'dispatch', );
+const RENDER= Symbol( 'render', );
 
 export default class Router
 {
@@ -38,12 +39,14 @@ export default class Router
 	 */
 	route( name, pattern, page=undefined, )
 	{
-		page= resolve( this[PAGE_DIR], page||name );
-		
 		if( this[BASE_PATH] )
 			pattern= `${this[BASE_PATH]}${pattern}`;
 		
-		this[ROUTES].set( name, new Route( name, pattern, page, ), );
+		const route= new Route( name, pattern, page||name, );
+		
+		this[ROUTES].set( name, route, );
+		
+		return route;
 	}
 	
 	/**
@@ -110,11 +113,20 @@ export default class Router
 	{
 		const route= this[DISPATCH]( link.url, '', '', );
 		
+		if(!( route )) return false;
+		
 		const state= new State( link.url, route.name, );
 		
 		this.history.push( state, );
 		
 		this[WINDOW].history.pushState( state, '', link.url, );
+		
+		return true;
+	}
+	
+	reload()
+	{
+		this[DISPATCH]( this[WINDOW].location.pathname, this[WINDOW].location.search, this[WINDOW].location.hash, );
 	}
 	
 	match( routeName, index=0, )
@@ -143,18 +155,26 @@ export default class Router
 				// show loading.
 				this.view.loading();
 				
-				// Render the PAGE and update the VIEW (async)
-				import(route.page+'.js').then(
-					page=> this.view.update(
-						page.default.render( matches, query, anchor, ),
-					),
-				);
+				this[RENDER]( route, matches, query, anchor, );
 				
 				return route;
 			}
 		}
 		
 		// 404
+	}
+	
+	[RENDER]( route, matches, query, anchor, )
+	{
+		const blocker= route.gates.reduce( ( blocker, gate, )=> blocker || (gate.validate()? null : gate), null, )
+		const page= (blocker||route).page;
+		
+		// Render the PAGE and update the VIEW (async)
+		import(resolve( this[PAGE_DIR], page+'.js')).then(
+			page=> this.view.update(
+				page.default.render( matches, query, anchor, ),
+			),
+		);
 	}
 }
 

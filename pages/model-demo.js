@@ -11,7 +11,7 @@ import Planet from '../resources/Planet.js';
 
 
 export default new Page( {
-	name: 'view-model',
+	name: 'model-demo',
 	
 	render()
 	{
