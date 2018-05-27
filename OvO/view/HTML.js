@@ -21,7 +21,6 @@ export const       dd= ( ...args )=> create(      'dd', ...args, );
 export const     span= ( ...args )=> create(    'span', ...args, );
 export const    small= ( ...args )=> create(   'small', ...args, );
 export const     code= ( ...args )=> create(    'code', ...args, );
-export const     form= ( ...args )=> create(    'form', ...args, );
 export const fieldset= ( ...args )=> create('fieldset', ...args, );
 export const   legend= ( ...args )=> create(  'legend', ...args, );
 export const    label= ( ...args )=> create(   'label', ...args, );
@@ -34,20 +33,8 @@ export const       th= ( ...args )=> create(      'th', ...args, );
 export const       td= ( ...args )=> create(      'td', ...args, );
 export const      img= ( ...args )=> create(     'img', ...args, );
 
-export const a= ( ...args )=> {
-	const vdom= create( 'a', ...args );
-	
-	const link= vdom.getAttribute( 'href', );
-	
-	if( link instanceof Link )
-		vdom.addListener( 'click', e=> {
-			e.preventDefault();
-			
-			link.active();
-		} );
-	
-	return vdom;
-}
+export const a= createLinkTag( 'a', 'href', 'click', );
+export const form= createLinkTag( 'form', 'action', 'submit', );
 
 export const input= {
 	input:    ( ...args )=> create( 'input', ...args, { type:'input', } ).empty(),
@@ -73,7 +60,7 @@ export const input= {
 };
 
 export const button= ( ...args )=> create( 'button', ...args, { type:'button', }, );
-button.submit= ( ...args )=> create( 'button', ...args, { type:'submit', }, );
+button.submit= createLinkTag( 'button', 'formaction', 'click', { type:'submit', }, );
 
 export default new Proxy( {}, {
 	
@@ -87,3 +74,20 @@ export default new Proxy( {}, {
 		return create( ...args, );
 	},
 }, )
+
+function createLinkTag( name, linkName, eventName, ...moreArgs )
+{
+	return ( ...args )=> {
+		const vdom= create( name, ...args, ...moreArgs, );
+		
+		const link= vdom.getAttribute( linkName, );
+		
+		if( link instanceof Function )
+			vdom.addListener( eventName, e=> {
+				if( link.call( e.target, e, ) )
+					e.preventDefault();
+			} );
+		
+		return vdom;
+	};
+}
