@@ -93,12 +93,12 @@ export default class Model
 		if( value instanceof Promise )
 		{
 			if( value.temp !== undefined )
-				this[ORIGIN].setValue( value.temp, );
+				this.setValue( value.temp, );
 			
 			value.then(
-				x=> this[ORIGIN].setValue( x, ),
+				x=> this.setValue( x, ),
 				e=> {
-					this[ORIGIN].setValue( value.rejected, );
+					this.setValue( value.rejected, );
 					throw e;
 				},
 			);
@@ -106,7 +106,12 @@ export default class Model
 		else
 		if( value instanceof Function )
 		{
-			this[SET_VALUE]( value(), );
+			this.setValue( value(), );
+		}
+		else
+		if( value instanceof Object && !(value instanceof Array) )
+		{
+			Object.assign( this, value, );
 		}
 		else
 		{
