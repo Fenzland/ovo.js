@@ -1,6 +1,7 @@
 import Model from './Model.js';
 import Set from './Set.js';
 import { HasMany, } from './Relation.js';
+import EnumerableObject from '../support/EnumerableObject.js';
 
 const FIELDS= Symbol( 'fields', );
 const PRIMARY_KEY= Symbol( 'primary_key', );
@@ -11,15 +12,29 @@ export default class Resource extends Model
 	static boot()
 	{
 		this[FIELDS]= this.makeFields();
-		this[FIELDS].map= function( callback, ){ return Object.entries( this, ).map( callback, ); };
-		this[FIELDS].forEach= function( callback, ){ Object.entries( this, ).forEach( callback, ); };
-		
+		Object.setPrototypeOf( this[FIELDS], EnumerableObject.prototype, )
+		this[FIELDS]
 		this[PRIMARY_KEY]= this.primaryKey? this.primaryKey() : 'id';
 		
 		this[RELATIONS]= {};
 	}
 	
-	static makeSet( promise, temp=undefined, reject=undefined, )
+	static makeInstance( promise, temp=undefined, rejected=undefined, )
+	{
+		if( !promise.temp && temp )
+			promise.temp= temp;
+		
+		if( !promise.rejected && rejected )
+			promise.rejected= rejected||temp;
+		
+		const instance= new this( this.defaults, );
+		
+		instance.setValue( promise, );
+		
+		return instance;
+	}
+	
+	static makeSet( promise, temp=undefined, rejected=undefined, )
 	{
 		if(!( promise.temp ))
 			promise.temp= ()=> (temp||[]).map( x=> new this( x, ), );
@@ -38,6 +53,22 @@ export default class Resource extends Model
 	static get key()
 	{
 		return this[PRIMARY_KEY];
+	}
+	
+	static get defaults()
+	{
+		return this[FIELDS].map( ( name, field, )=> {
+			if( field.defaults )
+				return field.defaults;
+			
+			switch( field.type )
+			{
+				case String: return '';
+				case Number: return 0;
+				case Array:  return [];
+				case Object: return {};
+			}
+		}, );
 	}
 	
 	static getRelation( name, )

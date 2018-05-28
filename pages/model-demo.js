@@ -85,7 +85,7 @@ export default new Page( {
 					thead(
 						tr(
 							th( 'index', ),
-							Planet.fields.map( ( [ name, field, ], )=> [
+							Planet.fields.mapValues( ( name, field, )=> [
 								th(
 									field.label,
 									$sorter( planets, name, ),
@@ -98,7 +98,7 @@ export default new Page( {
 						ForEach( planets, ( planet, i, )=> [
 							tr(
 								td( i, ),
-								Planet.fields.map( ( [ name, field, ], )=> [
+								Planet.fields.mapValues( ( name, field, )=> [
 									td( planet[name], ),
 								] ),
 								td(
