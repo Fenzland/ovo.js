@@ -26,7 +26,33 @@ export class HasMany extends Relation
 	{
 		if( set.length>0 )
 			return this.to[`of${ucfirst( this.relatedName, )}s`]( set, options, );
+		else
+			return [];
+	}
+}
+
+export class BelongsTo extends Relation
+{
+	constructor( name, from, to, relatedName, )
+	{
+		super();
 		
-		return [];
+		this.from= from;
+		this.to= to;
+		this.name= name;
+		this.relatedName= relatedName;
+	}
+	
+	loadFromOne( model )
+	{
+		return this.to.find( model[this.relatedName] );
+	}
+	
+	loadFromMany( set )
+	{
+		if( set.length>0 )
+			return this.to.findMany( set.map( x=> x[this.relatedName], ) );
+		else
+			return [];
 	}
 }

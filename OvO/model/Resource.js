@@ -1,6 +1,6 @@
 import Model from './Model.js';
 import Set from './Set.js';
-import { HasMany, } from './Relation.js';
+import { HasMany, BelongsTo, } from './Relation.js';
 import EnumerableObject from '../support/EnumerableObject.js';
 
 const FIELDS= Symbol( 'fields', );
@@ -83,5 +83,10 @@ export default class Resource extends Model
 	static hasMany( name, resource, relatedName, )
 	{
 		return this[RELATIONS][name]= new HasMany( name, this, resource, relatedName, );
+	}
+	
+	static belongsTo( name, resource, relatedName, )
+	{
+		return this[RELATIONS][name]= new BelongsTo( name, this, resource, relatedName, );
 	}
 }
