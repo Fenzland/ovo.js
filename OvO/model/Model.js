@@ -176,10 +176,10 @@ export default class Model
 	
 	static express( callback, ...models )
 	{
-		const expression= new Model( callback( ...models.map( x=>x.valueOf(), ), ), );
+		const expression= new Model( callback( ...models.map( x=> x instanceof Model ? x.valueOf() : x, ), ), );
 		
 		models.forEach(
-			model=> model.listenedBy( ()=> expression.setValue( callback( ...models.map( x=>x.valueOf(), ), ), ) ),
+			model=> model instanceof Model && model.listenedBy( ()=> expression.setValue( callback( ...models.map( x=>x.valueOf(), ), ), ) ),
 		);
 		
 		return expression;

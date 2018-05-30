@@ -36,6 +36,9 @@ export default class Resource extends Model
 	
 	static makeSet( promise, temp=undefined, rejected=undefined, )
 	{
+		if( promise instanceof Function )
+			return this.makeSet( promise(), temp, rejected, );
+		
 		if(!( promise.temp ))
 			promise.temp= ()=> (temp||[]).map( x=> new this( x, ), );
 		
@@ -63,10 +66,11 @@ export default class Resource extends Model
 			
 			switch( field.type )
 			{
-				case String: return '';
-				case Number: return 0;
-				case Array:  return [];
-				case Object: return {};
+				case String:  return '';
+				case Number:  return 0;
+				case Boolean: return false;
+				case Array:   return [];
+				case Object:  return {};
 			}
 		}, );
 	}
