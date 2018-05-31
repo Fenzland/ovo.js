@@ -81,7 +81,7 @@ export default new Page( {
 					),
 				),
 				table(
-					caption( 'Planets', ),
+					caption( 'Planets (', planets.length, ')', ),
 					thead(
 						tr(
 							th( 'index', ),

@@ -17,6 +17,9 @@ export default class Set extends ArrayModel
 	{
 		const relation= this[RESOURCE].getRelation( relationName, );
 		
+		if(!( relation ))
+			throw `Relation '${relationName}' not exists.`;
+		
 		function load( x, )
 		{
 			x[relation.name]= relation.loadFromOne( x, options, );
@@ -29,10 +32,18 @@ export default class Set extends ArrayModel
 		return this;
 	}
 	
+	find( keyValue, )
+	{
+		return super.find( x=> x.keyIs( keyValue, ), );
+	}
+	
 	get keys()
 	{
 		const keyName= this[RESOURCE].key;
 		
-		return z(this).map( x=> x[keyName], );
+		if( Array.isArray( keyName, ) )
+			return this.map( x=> keyName.map( k=> x[k], ), );
+		else
+			return this.map( x=> x[keyName], );
 	}
 }

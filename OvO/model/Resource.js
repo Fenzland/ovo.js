@@ -89,4 +89,20 @@ export default class Resource extends Model
 	{
 		return this[RELATIONS][name]= new BelongsTo( name, this, resource, relatedName, );
 	}
+	
+	keyIs( key )
+	{
+		const keyName= this.constructor.key;
+		
+		if( Array.isArray( keyName, ) )
+			if( Array.isArray( key, ) )
+				return keyName.reduce(
+					( reduced, x, i, )=> reduced && (this[x]&&this[x].valueOf())===(key[i]&&key[i].valueOf()),
+					true,
+				);
+			else
+				return false;
+		else
+			return this[keyName].valueOf()===key;
+	}
 }

@@ -3,9 +3,70 @@ const VALUE= Symbol( 'value', );
 const LISTENERS= Symbol( 'listeners', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
-const IS_ARRAY= Symbol( 'is_array', );
+const OBJECT_VALUE= Symbol( 'object_value', );
 const LENGTH= Symbol( 'length', );
 const EMIT= Symbol( 'emit', );
+
+function makeProxy( target, )
+{
+	return new Proxy( target, {
+		
+		get( target, key, receiver, )
+		{
+			const getter= target.__lookupGetter__( key, );
+			
+			if( getter )
+			{
+				return getter.call( target, );
+			}
+			else
+			if( target[key] )
+				return target[key];
+			else
+				return target[CHILDREN][key];
+		},
+		
+		set( target, key, value, receiver, )
+		{
+			if( typeof key === 'symbol' )
+			{
+				target[key]= value;
+				return true;
+			}
+			
+			if( target[CHILDREN][key] )
+				target[CHILDREN][key].setValue( value, );
+			else
+				target[CHILDREN][key]= new Model( value, );
+			return true;
+		},
+		
+		has( target, key, )
+		{
+			return key in target[CHILDREN];
+		},
+		
+		deleteProperty( target, key, )
+		{
+			return delete target[CHILDREN][key];
+		},
+		
+		ownKeys( target, )
+		{
+			return Object.keys( target[CHILDREN], );
+		},
+		
+		getOwnPropertyDescriptor( target, key, )
+		{
+			return Object.getOwnPropertyDescriptor( target[CHILDREN], key, );
+		},
+		
+		getOwnPropertyDescriptors( target, )
+		{
+			return Object.getOwnPropertyDescriptors( target[CHILDREN], );
+		},
+	}, );
+}
 
 export default class Model
 {
@@ -13,79 +74,39 @@ export default class Model
 	{
 		if( value instanceof Model ) return value;
 		
-		this[CHILDREN]= {};
-		this[LISTENERS]= [];
-		this[ORIGIN]= this;
+		let target;
 		
 		if( Array.isArray( value, ) )
 		{
-			setAsArrayModel( this, );
-			
-			this[CHILDREN]= value.map( x=> new Model( x, ), );
+			Object.setPrototypeOf( target= [], ArrayModel.prototype, );
+		}
+		else
+			target= this
+		
+		target[CHILDREN]= {};
+		target[LISTENERS]= [];
+		target[ORIGIN]= target;
+		
+		if( Array.isArray( value, ) )
+		{
+			target[CHILDREN]= value.map( x=> new Model( x, ), );
 		}
 		else
 		if( value instanceof Object )
 		{
 			for( let key in value )
 			{
-				this[CHILDREN][key]= new Model( value[key], );
+				target[CHILDREN][key]= new Model( value[key], );
 			}
+			
+			target[VALUE]= OBJECT_VALUE;
 		}
 		else
 		{
-			this[VALUE]= value;
+			target[VALUE]= value;
 		}
 		
-		return new Proxy( this, {
-			
-			get( target, key, receiver, )
-			{
-				if( target[key] )
-					return target[key];
-				else
-					return target[CHILDREN][key];
-			},
-			
-			set( target, key, value, receiver, )
-			{
-				if( typeof key === 'symbol' )
-				{
-					target[key]= value;
-					return true;
-				}
-				
-				if( target[CHILDREN][key] )
-					target[CHILDREN][key].setValue( value, );
-				else
-					target[CHILDREN][key]= new Model( value, );
-				return true;
-			},
-			
-			has( target, key, )
-			{
-				return key in target[CHILDREN];
-			},
-			
-			deleteProperty( target, key, )
-			{
-				return delete target[CHILDREN][key];
-			},
-			
-			ownKeys( target, )
-			{
-				return Object.keys( target[CHILDREN], );
-			},
-			
-			getOwnPropertyDescriptor( target, key, )
-			{
-				return Object.getOwnPropertyDescriptor( target[CHILDREN], key, );
-			},
-			
-			getOwnPropertyDescriptors( target, )
-			{
-				return Object.getOwnPropertyDescriptors( target[CHILDREN], );
-			},
-		}, );
+		return makeProxy( target, );
 	}
 	
 	setValue( value, )
@@ -109,9 +130,23 @@ export default class Model
 			this.setValue( value(), );
 		}
 		else
+		if( value instanceof Model )
+		{
+			const originValue= this.valueOf();
+			
+			this[VALUE]= value[VALUE];
+			Object.assign( this, value[CHILDREN], );
+			
+			this[EMIT]( this.valueOf(), originValue, );
+		}
+		else
 		if( value instanceof Object && !(value instanceof Array) )
 		{
+			const originValue= this.valueOf();
+			
 			Object.assign( this, value, );
+			
+			this[EMIT]( value, originValue, );
 		}
 		else
 		{
@@ -127,12 +162,20 @@ export default class Model
 		
 		this[ORIGIN][VALUE]= value;
 		
+		this[EMIT]( value, originValue, );
+	}
+	
+	[EMIT]( value, originValue, )
+	{
 		this[ORIGIN][LISTENERS].forEach( listener=> listener( value, originValue, ), );
 	}
 	
 	valueOf()
 	{
-		return this[ORIGIN][VALUE];
+		if( this[ORIGIN][VALUE] === OBJECT_VALUE )
+			return this[ORIGIN][CHILDREN];
+		else
+			return this[ORIGIN][VALUE];
 	}
 	
 	toString()
@@ -162,16 +205,6 @@ export default class Model
 	express( callback, )
 	{
 		return Model.express( callback, this, );
-		const expression= new Model( callback( this[ORIGIN][VALUE], ), );
-		
-		this[ORIGIN].listenedBy( value=> expression.setValue( callback( value, ), ) );
-		
-		return expression;
-	}
-	
-	get isArray()
-	{
-		return this[IS_ARRAY]||false;
 	}
 	
 	static express( callback, ...models )
@@ -275,6 +308,30 @@ export class ArrayModel extends Model
 		return removed;
 	}
 	
+	find( finder, )
+	{
+		const m= new Model( this[CHILDREN].find( finder, ), );
+		
+		this.listenedBy( ( index, model, )=> {
+			if( model && finder( model, ) )
+				m.setValue( model, );
+		}, );
+		
+		return m;
+	}
+	
+	findIndex( finder, )
+	{
+		const m= new Model( this[CHILDREN].findIndex( finder, ), );
+		
+		this.listenedBy( ( index, model, )=> {
+			if( model && finder( model, ) )
+				m.setValue( index, );
+		}, );
+		
+		return m;
+	}
+	
 	reverse()
 	{
 		for( let l= this[ORIGIN][CHILDREN].length, i= 0; i < l; ++i )
@@ -301,6 +358,11 @@ export class ArrayModel extends Model
 	get length()
 	{
 		return this[LENGTH]||(this[LENGTH]= new Model( this[ORIGIN][CHILDREN].length, ));
+	}
+	
+	valueOf()
+	{
+		return this[ORIGIN][CHILDREN].concat();
 	}
 	
 	[SET_VALUE]( value, )
@@ -336,11 +398,4 @@ export class ArrayModel extends Model
 		
 		return model;
 	}
-}
-
-function setAsArrayModel( model, )
-{
-	Object.setPrototypeOf( model, ArrayModel.prototype, );
-	
-	model.constructor= ArrayModel;
 }
