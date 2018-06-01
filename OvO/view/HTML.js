@@ -14,6 +14,8 @@ export const       h3= ( ...args )=> create(      'h3', ...args, );
 export const       h4= ( ...args )=> create(      'h4', ...args, );
 export const       h5= ( ...args )=> create(      'h5', ...args, );
 export const       h6= ( ...args )=> create(      'h6', ...args, );
+export const       h7= ( ...args )=> create(      'h7', ...args, );
+export const       h8= ( ...args )=> create(      'h8', ...args, );
 export const        p= ( ...args )=> create(       'p', ...args, );
 export const       dl= ( ...args )=> create(      'dl', ...args, );
 export const       dt= ( ...args )=> create(      'dt', ...args, );
