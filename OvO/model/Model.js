@@ -180,7 +180,7 @@ export default class Model
 	
 	toString()
 	{
-		return `${this[ORIGIN][VALUE]}`;
+		return `${this.valueOf()}`;
 	}
 	
 	[Symbol.toPrimitive]( hint, )
