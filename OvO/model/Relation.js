@@ -45,6 +45,9 @@ export class BelongsTo extends Relation
 	
 	loadFromOne( model )
 	{
+		if(!( this.to.find ))
+			throw `Method 'find' of ${this.to.name} is not implemeted.`;
+		
 		return this.to.find( model[this.relatedName] );
 	}
 	

@@ -41,3 +41,7 @@ export default class EnumerableObject
 	}
 	
 }
+
+export const map= EnumerableObject.map;
+export const mapValues= EnumerableObject.mapValues;
+export const forEach= EnumerableObject.forEach;

@@ -71,6 +71,7 @@ export default class Resource extends Model
 				case Boolean: return false;
 				case Array:   return [];
 				case Object:  return {};
+				default:      return new field.type();
 			}
 		}, );
 	}
@@ -90,6 +91,13 @@ export default class Resource extends Model
 		return this[RELATIONS][name]= new BelongsTo( name, this, resource, relatedName, );
 	}
 	
+	static findMany( keys, )
+	{
+		return this.makeSet(
+			keys.map( key=> this.find( key, ), )
+		);
+	}
+	
 	keyIs( key )
 	{
 		const keyName= this.constructor.key;
@@ -104,5 +112,24 @@ export default class Resource extends Model
 				return false;
 		else
 			return this[keyName].valueOf()===key;
+	}
+	
+	load( relationName, options={}, )
+	{
+		const relation= this.constructor.getRelation( relationName, );
+		
+		if(!( relation ))
+			throw `Relation '${relationName}' not exists.`;
+		
+		function load( x, )
+		{
+			x[relation.name]= relation.loadFromOne( x, options, );
+		}
+		
+		load( this, );
+		
+		this.listenedBy( ()=> load( this, ), );
+		
+		return this;
 	}
 }

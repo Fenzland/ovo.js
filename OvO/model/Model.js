@@ -1,3 +1,6 @@
+import { map, } from '../support/EnumerableObject.js';
+
+const ID= Symbol( 'id', );
 const CHILDREN= Symbol( 'children', );
 const VALUE= Symbol( 'value', );
 const LISTENERS= Symbol( 'listeners', );
@@ -7,8 +10,12 @@ const OBJECT_VALUE= Symbol( 'object_value', );
 const LENGTH= Symbol( 'length', );
 const EMIT= Symbol( 'emit', );
 
+let id= 0;
+
 function makeProxy( target, )
 {
+	target[ID]= ++id;
+	
 	return new Proxy( target, {
 		
 		get( target, key, receiver, )
@@ -35,7 +42,19 @@ function makeProxy( target, )
 			}
 			
 			if( target[CHILDREN][key] )
-				target[CHILDREN][key].setValue( value, );
+			{
+				if( value instanceof Model )
+				{
+					[ target[CHILDREN][key], value, ]= [ value.express( x=> x, ), target[CHILDREN][key], ];
+					
+					target[CHILDREN][key][CHILDREN]= value[CHILDREN];
+					target[CHILDREN][key][LISTENERS]= value[LISTENERS];
+					
+					target[CHILDREN][key].setValue( target[CHILDREN][key].valueOf(), );
+				}
+				else
+					target[CHILDREN][key].setValue( value, );
+			}
 			else
 				target[CHILDREN][key]= new Model( value, );
 			return true;
@@ -173,7 +192,7 @@ export default class Model
 	valueOf()
 	{
 		if( this[ORIGIN][VALUE] === OBJECT_VALUE )
-			return this[ORIGIN][CHILDREN];
+			return map( this[ORIGIN][CHILDREN], ( k, v )=> v.valueOf(), );
 		else
 			return this[ORIGIN][VALUE];
 	}
