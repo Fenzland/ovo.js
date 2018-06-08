@@ -1,6 +1,6 @@
 import Pointer from './Pointer.js';
 
-export function parse( string, )
+export function parse( string='', )
 {
 	if( 0===string.indexOf( '?', ) )
 		string= string.slice( 1, );

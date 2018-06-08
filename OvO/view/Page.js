@@ -9,7 +9,7 @@ export default class Page
 		this.template= template;
 	}
 	
-	render( params, queries, anchor, )
+	render( params={}, queries='', anchor='', )
 	{
 		queries= Query.parse( queries, );
 		

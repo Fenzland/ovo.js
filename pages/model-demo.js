@@ -27,9 +27,9 @@ export default new Page( {
 		(async ( str, interval, )=> {
 			for( let i= 0; i <= str.length; ++i )
 			{
-				await wait( interval, );
-				
 				m.title= str.slice( 0, i, ) + '.';
+				
+				await wait( interval, );
 			}
 		})( 'OvO view model demo', 250, );
 		

@@ -43,6 +43,13 @@ const contents= [
 		'will keep alive without any change, a widget only in first page will fell asleep ',
 		'and keep an single instance with key infos or states, wating for using again. ',
 	),
+	h2( 'Data', ),
+	p(
+		'We need three types of data for views. Value, Promise and Model. ',
+		'Values are sync and constant, which show at once and never change. ',
+		'Promises are async and constant, which show at futrue and never change after resolved or rejected. ',
+		'Models are always changable, may sync or async. ',
+	),
 ];
 
 export default new Page( {

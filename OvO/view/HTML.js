@@ -34,12 +34,13 @@ export const       tr= ( ...args )=> create(      'tr', ...args, );
 export const       th= ( ...args )=> create(      'th', ...args, );
 export const       td= ( ...args )=> create(      'td', ...args, );
 export const      img= ( ...args )=> create(     'img', ...args, );
+export const   option= ( ...args )=> create(  'option', ...args, );
 
 export const a= createLinkTag( 'a', 'href', 'click', );
 export const form= createLinkTag( 'form', 'action', 'submit', );
 
 export const input= {
-	input:    ( ...args )=> create( 'input', ...args, { type:'input', } ).empty(),
+	hidden:   ( ...args )=> create( 'input', ...args, { type:'hidden', } ).empty(),
 	text:     ( ...args )=> create( 'input', ...args, { type:'text', } ).empty(),
 	search:   ( ...args )=> create( 'input', ...args, { type:'search', } ).empty(),
 	password: ( ...args )=> create( 'input', ...args, { type:'password', } ).empty(),
