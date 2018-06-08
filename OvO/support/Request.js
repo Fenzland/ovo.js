@@ -35,6 +35,7 @@ export default class Request extends Function
 				method: this[METHOD],
 				headers,
 				body: body,
+				credentials: 'same-origin',
 			},
 		);
 	}

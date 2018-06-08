@@ -24,8 +24,10 @@ export default class FormAction extends Request
 				method,
 				headers: {
 					'Content-Type': form.encoding,
+					'Accept': form.accept || form.getAttribute( 'accept', ) || 'application/json',
 				},
 				body: body,
+				credentials: 'same-origin',
 			},
 		);
 	}
