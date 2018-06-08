@@ -137,6 +137,14 @@ export default class VDOM
 	
 	toDOM( document, )
 	{
+		if( this[DOM] )
+			return [ this[DOM], ];
+		else
+			return this.freshDOM( document, );
+	}
+	
+	freshDOM( document, )
+	{
 		const dom= (
 			this[NAMESPACE]
 			? document.createElementNS( this[NAMESPACE], this[NAME])
