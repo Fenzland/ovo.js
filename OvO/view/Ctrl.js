@@ -13,6 +13,7 @@ const MAKE_ROW= Symbol( 'make_row', );
 const INDEXES= Symbol( 'indexes', );
 const INDEX_OF= Symbol( 'indexes_of', );
 const ARRANGE_INDEXES= Symbol( 'arrange_indexes', );
+const ARRANGING_INDEXES= Symbol( 'arranging_indexes', );
 const DOCUMENT= Symbol( 'document', );
 const ROW_CACHE= Symbol( 'row_cache', );
 
@@ -32,7 +33,7 @@ class IfCtrl extends Ctrl
 		
 		this[MODEL]= model;
 		
-		model.listenedBy( ( v, o, )=>{
+		model.listenedBy( ( v, o, )=> {
 			if( !!v ^ !!o )
 				this[UPDATE]( +!!v, );
 		}, );
@@ -191,8 +192,12 @@ class ForEachCtrl extends Ctrl
 	
 	[ARRANGE_INDEXES]()
 	{
-		for( let [ i, x, ] of this[MODEL].entries() )
-			this[INDEX_OF]( x, ).setValue( i, );
+		if(!( this[ARRANGING_INDEXES] ))
+			this[ARRANGING_INDEXES]= setTimeout( ()=>{
+				for( let [ i, x, ] of this[MODEL].entries() )
+					this[INDEX_OF]( x, ).setValue( i, );
+				this[ARRANGING_INDEXES]= undefined;
+			} );
 	}
 	
 	[UPDATE]( i, model, )
