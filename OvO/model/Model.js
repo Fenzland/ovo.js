@@ -1,6 +1,7 @@
 import { map, } from '../support/EnumerableObject.js';
 
 const ID= Symbol( 'id', );
+const NAME= Symbol( 'name', );
 const CHILDREN= Symbol( 'children', );
 const VALUE= Symbol( 'value', );
 const LISTENERS= Symbol( 'listeners', );
@@ -56,7 +57,7 @@ function makeProxy( target, )
 					target[CHILDREN][key].setValue( value, );
 			}
 			else
-				target[CHILDREN][key]= new Model( value, );
+				target[CHILDREN][key]= new Model( value, `${target[NAME]}.${key}`, );
 			return true;
 		},
 		
@@ -89,9 +90,14 @@ function makeProxy( target, )
 
 export default class Model
 {
-	constructor( value, )
+	constructor( value, name='', )
 	{
-		if( value instanceof Model ) return value;
+		if( value instanceof Model )
+		{
+			value[NAME]= name;
+			
+			return value;
+		}
 		
 		let target;
 		
@@ -104,18 +110,19 @@ export default class Model
 		
 		target[CHILDREN]= {};
 		target[LISTENERS]= [];
+		target[NAME]= name;
 		target[ORIGIN]= target;
 		
 		if( Array.isArray( value, ) )
 		{
-			target[CHILDREN]= value.map( x=> new Model( x, ), );
+			target[CHILDREN]= value.map( x=> new Model( x, `${name}[]`, ), );
 		}
 		else
 		if( value instanceof Object && value!==null )
 		{
 			for( let key in value )
 			{
-				target[CHILDREN][key]= new Model( value[key], );
+				target[CHILDREN][key]= new Model( value[key], `${name}.${key}`, );
 			}
 			
 			target[VALUE]= OBJECT_VALUE;
@@ -235,7 +242,7 @@ export default class Model
 	
 	static express( callback, ...models )
 	{
-		const expression= new Model( callback( ...models.map( x=> x instanceof Model ? x.valueOf() : x, ), ), );
+		const expression= new Model( callback( ...models.map( x=> x instanceof Model ? x.valueOf() : x, ), ), `expressionOf( ${models.map( x=> x[NAME], ).join( ', ', )}, )`, );
 		
 		models.forEach(
 			model=> model instanceof Model && model.listenedBy( ()=> expression.setValue( callback( ...models.map( x=>x.valueOf(), ), ), ) ),
@@ -320,7 +327,7 @@ export class ArrayModel extends Model
 	{
 		let removed= []
 		
-		inserted= inserted.map( x=> new Model( x, );
+		inserted= inserted.map( x=> new Model( x, `${this[NAME]}[]`, ), );
 		
 		if( count > 0 )
 		{
@@ -340,7 +347,7 @@ export class ArrayModel extends Model
 	
 	find( finder, )
 	{
-		const m= new Model( this[CHILDREN].find( finder, ), );
+		const m= new Model( this[CHILDREN].find( finder, ), `findFrom( ${this[NAME]}, )`, );
 		
 		this.listenedBy( ( index, model, )=> {
 			if( model && finder( model, ) )
@@ -352,7 +359,7 @@ export class ArrayModel extends Model
 	
 	findIndex( finder, )
 	{
-		const m= new Model( this[CHILDREN].findIndex( finder, ), );
+		const m= new Model( this[CHILDREN].findIndex( finder, ), `findIndexFrom( ${this[NAME]}, )`, );
 		
 		this.listenedBy( ( index, model, )=> {
 			if( model && finder( model, ) )
@@ -387,7 +394,7 @@ export class ArrayModel extends Model
 	
 	get length()
 	{
-		return this[LENGTH]||(this[LENGTH]= new Model( this[ORIGIN][CHILDREN].length, ));
+		return this[LENGTH]||(this[LENGTH]= new Model( this[ORIGIN][CHILDREN].length, `${this[NAME]}.length`, ));
 	}
 	
 	valueOf()
@@ -416,7 +423,7 @@ export class ArrayModel extends Model
 				const items= value.slice( newI, pairedI, );
 				
 				this[ORIGIN][CHILDREN].splice( orgI, 0, ...items, );
-				items.map( ( x, ii, )=> this[EMIT]( orgI- -ii, new Model( x, ), ), );
+				items.map( ( x, ii, )=> this[EMIT]( orgI- -ii, new Model( x, `${this[NAME]}`, ), ), );
 				
 				orgI-= newI - 1 - pairedI;
 				newI= pairedI - - 1;
@@ -434,7 +441,7 @@ export class ArrayModel extends Model
 			const items= value.slice( newI, );
 			
 			this[ORIGIN][CHILDREN].push( ...items, );
-			items.map( ( x, ii )=> this[EMIT]( orgI- -ii, new Model( x, ), ), );
+			items.map( ( x, ii )=> this[EMIT]( orgI- -ii, new Model( x, `${this[NAME]}`, ), ), );
 		}
 		
 		this.length.setValue( this[ORIGIN][CHILDREN].length, );

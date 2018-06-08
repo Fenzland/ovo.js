@@ -176,7 +176,7 @@ class ForEachCtrl extends Ctrl
 		let i= this[INDEXES].get( x, );
 		
 		if(!( i ))
-			this[INDEXES].set( x, i= new Model( defaults, ), );
+			this[INDEXES].set( x, i= new Model( defaults, 'ForEach.index', ), );
 		
 		return i;
 	}
