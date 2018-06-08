@@ -111,7 +111,7 @@ export default class Model
 			target[CHILDREN]= value.map( x=> new Model( x, ), );
 		}
 		else
-		if( value instanceof Object )
+		if( value instanceof Object && value!==null )
 		{
 			for( let key in value )
 			{
@@ -159,11 +159,18 @@ export default class Model
 			this[EMIT]( this.valueOf(), originValue, );
 		}
 		else
-		if( value instanceof Object && !(value instanceof Array) )
+		if( value instanceof Object && !(value instanceof Array) && value!==null )
 		{
 			const originValue= this.valueOf();
 			
+			if( originValue instanceof Object && value!==null )
+				for( let i in originValue )
+					if(!( i in value ))
+						value[i]= undefined;
+			
 			Object.assign( this, value, );
+			
+			this[VALUE]= OBJECT_VALUE;
 			
 			this[EMIT]( value, originValue, );
 		}
