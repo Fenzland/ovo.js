@@ -44,9 +44,12 @@ class IfCtrl extends Ctrl
 		};
 	}
 	
-	then( ...args )
+	then( first, ...args )
 	{
-		this[VDOMS][1]= VDOM.create( '', ...args, ).children;
+		if( first instanceof Function )
+			this[VDOMS][1]= VDOM.create( '', first( this[MODEL], ), ).children;
+		else
+			this[VDOMS][1]= VDOM.create( '', first, ...args, ).children;
 		
 		return this;
 	}
@@ -56,6 +59,11 @@ class IfCtrl extends Ctrl
 		this[VDOMS][0]= VDOM.create( '', ...args, ).children;
 		
 		return this;
+	}
+	
+	and( callback, )
+	{
+		return If( this[MODEL].express( callback, ), );
 	}
 	
 	toHTML()
