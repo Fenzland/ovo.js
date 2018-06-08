@@ -168,6 +168,9 @@ class ForEachCtrl extends Ctrl
 	
 	[MAKE_ROW]( x, )
 	{
+		// TODO one vdom to many doms, and reopen this cache.
+		return VDOM.create( '', this[TEMPLATE]( x, this[INDEX_OF]( x, ), ), ).children;
+		
 		let row= this[ROW_CACHE].get( x, );
 		
 		if(!( row ))
