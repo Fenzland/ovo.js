@@ -2,27 +2,27 @@ export default class EnumerableObject
 {
 	map( callback, )
 	{
-		const $={};
-		
-		for( let i in this )
-			$[i]= callback( i, this[i], );
-		
-		return $;
+		return this.constructor.map( this, callback, );
 	}
 	
 	mapValues( callback, )
 	{
-		return Object.entries( this, ).map( ( [ n, v, ] )=> callback( n, v, ), );
+		return this.constructor.mapValues( this, callback, );
 	}
 	
 	forEach( callback, )
 	{
-		Object.entries( this, ).forEach( ( [ n, v, ] )=> callback( n, v, ), );
+		return this.constructor.forEach( this, callback, );
+	}
+	
+	toString()
+	{
+		return JSON.stringify( this, );
 	}
 	
 	static map( object, callback, )
 	{
-		const $={};
+		const $= new this;
 		
 		for( let i in object )
 			$[i]= callback( i, object[i], );
@@ -42,6 +42,6 @@ export default class EnumerableObject
 	
 }
 
-export const map= EnumerableObject.map;
-export const mapValues= EnumerableObject.mapValues;
-export const forEach= EnumerableObject.forEach;
+export const map= EnumerableObject.map.bind( EnumerableObject, );
+export const mapValues= EnumerableObject.mapValues.bind( EnumerableObject, );
+export const forEach= EnumerableObject.forEach.bind( EnumerableObject, );
