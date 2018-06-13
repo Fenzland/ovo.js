@@ -1,4 +1,4 @@
-import { map, } from '../support/EnumerableObject.js';
+import EnumerableObject, { map, } from '../support/EnumerableObject.js';
 
 const ID= Symbol( 'id', );
 const NAME= Symbol( 'name', );
@@ -118,7 +118,7 @@ export default class Model
 			target[CHILDREN]= value.map( x=> new Model( x, `${name}[]`, ), );
 		}
 		else
-		if( value instanceof Object && value!==null )
+		if( value.constructor === Object || value.constructor === EnumerableObject )
 		{
 			for( let key in value )
 			{
@@ -166,7 +166,7 @@ export default class Model
 			this[EMIT]( this.valueOf(), originValue, );
 		}
 		else
-		if( value instanceof Object && !(value instanceof Array) && value!==null )
+		if( value.constructor === Object || value.constructor === EnumerableObject )
 		{
 			const originValue= this.valueOf();
 			
