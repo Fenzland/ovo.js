@@ -250,6 +250,16 @@ export default class Model
 		
 		return expression;
 	}
+	
+	$( callback, )
+	{
+		return Model.express( callback, this, );
+	}
+	
+	static $( ...args )
+	{
+		return Model.express( ...args, );
+	}
 }
 
 export class ArrayModel extends Model
@@ -454,3 +464,5 @@ export class ArrayModel extends Model
 		return model;
 	}
 }
+
+export const $= Model.$
