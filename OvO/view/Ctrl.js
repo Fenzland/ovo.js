@@ -62,9 +62,9 @@ class IfCtrl extends Ctrl
 		return this;
 	}
 	
-	and( callback, )
+	and( callback, ...otherModels )
 	{
-		return If( this[MODEL].express( callback, ), );
+		return If( Model.express( callback, this[MODEL], ...otherModels, ), );
 	}
 	
 	toHTML()
