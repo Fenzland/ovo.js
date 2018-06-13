@@ -8,6 +8,7 @@ const DOMS= Symbol( 'doms', );
 const ACTIVED_DOMS= Symbol( 'get_doms', );
 const GET_DOMS= Symbol( 'get_doms', );
 const UPDATE= Symbol( 'update', );
+const TO_BOOL= Symbol( 'to_bool', );
 const TEMPLATE= Symbol( 'template', );
 const MAKE_ROW= Symbol( 'make_row', );
 const INDEXES= Symbol( 'indexes', );
@@ -34,8 +35,8 @@ class IfCtrl extends Ctrl
 		this[MODEL]= model;
 		
 		model.listenedBy( ( v, o, )=> {
-			if( !!v ^ !!o )
-				this[UPDATE]( +!!v, );
+			if( this.constructor[TO_BOOL]( v, ) ^ this.constructor[TO_BOOL]( o, ) )
+				this[UPDATE]( +this.constructor[TO_BOOL]( v, ), );
 		}, );
 		
 		this[DOMS]= {};
@@ -79,7 +80,7 @@ class IfCtrl extends Ctrl
 	
 	get value()
 	{
-		return +!!this[MODEL].valueOf();
+		return +this.constructor[TO_BOOL]( this[MODEL].valueOf(), );
 	}
 	
 	[GET_DOMS]( value, )
@@ -106,6 +107,11 @@ class IfCtrl extends Ctrl
 		this[ACTIVED_DOMS].slice( 1, ).forEach( x=> x.remove(), );
 		
 		this[ACTIVED_DOMS]= doms;
+	}
+	
+	static [TO_BOOL]( x, )
+	{
+		return !!x;
 	}
 }
 
