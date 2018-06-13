@@ -120,9 +120,43 @@ export function If( model, )
 	return new IfCtrl( model, );
 }
 
+class IfNotCtrl extends IfCtrl
+{
+	static [TO_BOOL]( x, )
+	{
+		return !x;
+	}
+}
+
 export function IfNot( model, )
 {
-	return new IfCtrl( model.express( x=> !x, ) );
+	return new IfNotCtrl( model );
+}
+
+class IfDefCtrl extends IfCtrl
+{
+	static [TO_BOOL]( x, )
+	{
+		return x!==undefined;
+	}
+}
+
+export function IfDef( model, )
+{
+	return new IfDefCtrl( model );
+}
+
+class IfUndCtrl extends IfCtrl
+{
+	static [TO_BOOL]( x, )
+	{
+		return x===undefined;
+	}
+}
+
+export function IfUnd( model, )
+{
+	return new IfUndCtrl( model );
 }
 
 class ForEachCtrl extends Ctrl
