@@ -32,12 +32,12 @@ export default class EnumerableObject
 	
 	static mapValues( object, callback, )
 	{
-		return Object.entries( object, ).map( ( [ n, v, ] )=> callback( n, v, ), );
+		return Object.entries( object, ).map( ( [ k, v, ] )=> callback( k, v, ), );
 	}
 	
 	static forEach( object, callback, )
 	{
-		Object.entries( object, ).forEach( ( [ n, v, ] )=> callback( n, v, ), );
+		Object.entries( object, ).forEach( ( [ k, v, ] )=> callback( k, v, ), );
 	}
 	
 }
