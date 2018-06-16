@@ -322,7 +322,7 @@ export class ArrayModel extends Model
 		
 		this.length.setValue( this[ORIGIN][CHILDREN].length - 1, );
 		
-		this[EMIT]( this[ORIGIN][CHILDREN].length, null, );
+		this[EMIT]( this[ORIGIN][CHILDREN].length, null, poped, );
 		
 		return poped;
 	}
@@ -333,7 +333,7 @@ export class ArrayModel extends Model
 		
 		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 		
-		this[EMIT]( 0, null, );
+		this[EMIT]( 0, null, shifted, );
 		
 		return shifted;
 	}
@@ -348,7 +348,7 @@ export class ArrayModel extends Model
 		{
 			removed= this[ORIGIN][CHILDREN].splice( start, count, );
 			
-			removed.forEach( x=> this[EMIT]( start, null, ), );
+			removed.forEach( x=> this[EMIT]( start, null, x, ), );
 		}
 		
 		this[ORIGIN][CHILDREN].splice( start, 0, ...inserted, );
@@ -426,7 +426,7 @@ export class ArrayModel extends Model
 		while( orgI < this[ORIGIN][CHILDREN].length )
 			if( newI >= value.length )
 				// new value run out, cut tail of original items.
-				this[ORIGIN][CHILDREN].splice( orgI, ).forEach( ()=> this[EMIT]( orgI, null, ), );
+				this[ORIGIN][CHILDREN].splice( orgI, ).forEach( x=> this[EMIT]( orgI, null, x, ), );
 			else
 			if( this[ORIGIN][CHILDREN][orgI] === value[newI] )
 				// paired, go next;
@@ -446,8 +446,8 @@ export class ArrayModel extends Model
 			else
 			{
 				// no pair any more, remove current original item;
-				this[ORIGIN][CHILDREN].splice( orgI, 1, );
-				this[EMIT]( orgI, null, );
+				const [ removed, ]= this[ORIGIN][CHILDREN].splice( orgI, 1, );
+				this[EMIT]( orgI, null, removed, );
 			}
 		
 		if( newI < value.length )
@@ -462,9 +462,9 @@ export class ArrayModel extends Model
 		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 	}
 	
-	[EMIT]( index, model, )
+	[EMIT]( index, model, removed=undefined, )
 	{
-		this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, ), );
+		this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, removed, ), );
 		
 		return model;
 	}
