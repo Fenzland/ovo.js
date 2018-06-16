@@ -211,6 +211,11 @@ export default class Model
 			return this[ORIGIN][VALUE];
 	}
 	
+	get isObject()
+	{
+		return this[ORIGIN][VALUE] === OBJECT_VALUE;
+	}
+	
 	toString()
 	{
 		return `${this.valueOf()}`;
