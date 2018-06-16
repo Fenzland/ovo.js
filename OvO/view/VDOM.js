@@ -1,7 +1,8 @@
+import EnumerableObject, { mapValues, } from '../support/EnumerableObject.js';
 import TextNode from './TextNode.js';
 import Listener from './Listener.js';
 import ITemplate from './ITemplate.js';
-import Model from '../model/Model.js';
+import Model, { ArrayModel, } from '../model/Model.js';
 
 const NAME= Symbol( 'name', );
 const NAMESPACE= Symbol( 'namespace', );
@@ -44,7 +45,13 @@ export default class VDOM
 			// Plant Object: as attributes
 			if( arg && arg.constructor === Object )
 				for( let attr in arg )
-					this.setAttribute( attr, arg[attr], );
+					if( attr === 'class' )
+						this.setClass( arg[attr], );
+					else
+					if( attr === 'style' )
+						this.setStyle( arg[attr], );
+					else
+						this.setAttribute( attr, arg[attr], );
 			else
 			// String: make a TextNode as a child
 			if( typeof arg === 'string' || (arg && arg.constructor === String) )
@@ -69,6 +76,81 @@ export default class VDOM
 	setNamespace( namespace, )
 	{
 		this[NAMESPACE]= namespace;
+	}
+	
+	setClass( value, )
+	{
+		if( value instanceof ArrayModel )
+		{
+			const className= value.valueOf().join( ' ', );
+			
+			this[ATTRIBUTES].set( 'class', className, );
+			
+			if( this[DOM] )
+				this[DOM].className= className;
+			
+			value.listenedBy( ( i, x, r, )=> {
+				
+				this[ATTRIBUTES].set( 'class', value.valueOf().join( ' ', ), );
+				
+				if( this[DOM] )
+				{
+					if( x )
+						this[DOM].classList.add( x, );
+					else
+						this[DOM].classList.remove( r, );
+				}
+			}, )
+		}
+		else
+		if( value instanceof Model )
+		{
+			this[ATTRIBUTES].set( 'class', value.valueOf(), );
+			
+			if( this[DOM] )
+				this[DOM].className= value.valueOf();
+			
+			value.listenedBy( v=> this[DOM].className= v, );
+		}
+		else
+		if( Array.isArray( value, ) )
+		{
+			const className= value.join( ' ', );
+			
+			this[ATTRIBUTES].set( 'class', className, );
+			
+			if( this[DOM] )
+				this[DOM].className( className, );
+		}
+		else
+		{
+			this[ATTRIBUTES].set( 'class', value, );
+			
+			if( this[DOM] )
+				this[DOM].className( value, );
+		}
+	}
+	
+	setStyle( value, )
+	{
+		if( value && (value.constructor === Object || value.constructor === EnumerableObject) )
+		{
+			this[SET_ATTRIBUTE]( 'style', mapValues( value, ( k, v, )=> `${k}:${v};`, ), );
+			
+			for( let k in value )
+			{
+				if( value[k] instanceof Model )
+					value[k].listenedBy( v=> {
+						if( this[DOM] )
+							this[DOM].style.setProperty( k, v, );
+					}, );
+			}
+		}
+		else
+		if( value instanceof Model && value.isObject )
+			;
+		else
+			this[SET_ATTRIBUTE]( 'style', value, );
 	}
 	
 	setAttribute( attr, value=true, )
