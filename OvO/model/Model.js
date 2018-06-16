@@ -316,6 +316,15 @@ export class ArrayModel extends Model
 		return this.length;
 	}
 	
+	join( delimiter, )
+	{
+		const joined= new Model( this.valueOf().join( delimiter, ), );
+		
+		this.listenedBy( ()=> joined.setValue( this.valueOf().join( delimiter, ), ), );
+		
+		return joined;
+	}
+	
 	pop()
 	{
 		const poped= this[ORIGIN][CHILDREN].pop();
