@@ -195,7 +195,7 @@ class ForEachCtrl extends Ctrl
 				const doms= this[MAKE_ROW]( x, ).map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
 				
 				if(!( doms.length ))
-					doms.push( new TextNode( '', ), );
+					doms.push( new Text( '', ), );
 				
 				return doms;
 			},
