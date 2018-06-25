@@ -253,7 +253,14 @@ export default class Model
 		);
 		
 		models.forEach(
-			model=> model instanceof Model && model.listenedBy( ()=> expression.setValue( callback( ...models.map( x=>x.valueOf(), ), ), ) ),
+			model=> (
+				model instanceof Model &&
+				model.listenedBy(
+					()=> expression.setValue(
+						callback( ...models.map( x=> x instanceof Model? x.valueOf() : x, ), ),
+					)
+				)
+			),
 		);
 		
 		return expression;
