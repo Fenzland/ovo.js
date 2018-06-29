@@ -216,6 +216,16 @@ export default class Model
 		return this[ORIGIN][VALUE] === OBJECT_VALUE;
 	}
 	
+	get id()
+	{
+		return this[ID];
+	}
+	
+	get name()
+	{
+		return this[NAME];
+	}
+	
 	toString()
 	{
 		return `${this.valueOf()}`;
@@ -401,6 +411,22 @@ export class ArrayModel extends Model
 		}, );
 		
 		return m;
+	}
+	
+	includes( value, )
+	{
+		if( value instanceof Model )
+			return this.findIndex( x=> x===value, ).$( x=> x>=0, );
+		else
+			return this.findIndex( x=> x.valueOf()===value, ).$( x=> x>=0, );
+	}
+	
+	currentlyIncludes( value, )
+	{
+		if( value instanceof Model )
+			return this[CHILDREN].includes( value, );
+		else
+			return this[CHILDREN].findIndex( x=> x.valueOf()===value, );
 	}
 	
 	reverse()
