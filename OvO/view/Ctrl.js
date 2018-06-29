@@ -11,12 +11,14 @@ const UPDATE= Symbol( 'update', );
 const TO_BOOL= Symbol( 'to_bool', );
 const TEMPLATE= Symbol( 'template', );
 const MAKE_ROW= Symbol( 'make_row', );
+const MAKE_DOMS= Symbol( 'make_doms', );
 const INDEXES= Symbol( 'indexes', );
 const INDEX_OF= Symbol( 'indexes_of', );
 const ARRANGE_INDEXES= Symbol( 'arrange_indexes', );
 const ARRANGING_INDEXES= Symbol( 'arranging_indexes', );
 const DOCUMENT= Symbol( 'document', );
 const ROW_CACHE= Symbol( 'row_cache', );
+const DOMS_CACHE= Symbol( 'doms_cache', );
 
 export default class Ctrl
 {
@@ -178,6 +180,7 @@ class ForEachCtrl extends Ctrl
 		
 		this[TEMPLATE]= template;
 		this[ROW_CACHE]= new WeakMap;
+		this[DOMS_CACHE]= new WeakMap;
 	}
 	
 	toHTML()
@@ -190,16 +193,7 @@ class ForEachCtrl extends Ctrl
 	toDOM( document, )
 	{
 		this[DOCUMENT]= document;
-		this[ACTIVED_DOMS]= this[MODEL].map(
-			x=> {
-				const doms= this[MAKE_ROW]( x, ).map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
-				
-				if(!( doms.length ))
-					doms.push( new Text( '', ), );
-				
-				return doms;
-			},
-		).concat( [ [ new Text( '', ), ], ], );
+		this[ACTIVED_DOMS]= this[MODEL].map( x=> this[MAKE_DOMS]( x, ) ).concat( [ [ new Text( '', ), ], ], );
 		
 		this[ARRANGE_INDEXES]();
 		
@@ -208,9 +202,6 @@ class ForEachCtrl extends Ctrl
 	
 	[MAKE_ROW]( x, )
 	{
-		// TODO one vdom to many doms, and reopen this cache.
-		return VDOM.create( '', this[TEMPLATE]( x, this[INDEX_OF]( x, ), ), ).children;
-		
 		let row= this[ROW_CACHE].get( x, );
 		
 		if(!( row ))
@@ -221,6 +212,23 @@ class ForEachCtrl extends Ctrl
 		}
 		
 		return row;
+	}
+	
+	[MAKE_DOMS]( x, )
+	{
+		let doms= this[DOMS_CACHE].get( x, );
+		
+		if(!( doms ))
+		{
+			doms= this[MAKE_ROW]( x, ).map( x=> x.toDOM( this[DOCUMENT], ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
+			
+			if(!( doms.length ))
+				doms.push( new Text( '', ), );
+			
+			this[DOMS_CACHE].set( x, doms, );
+		}
+		
+		return doms;
 	}
 	
 	[INDEX_OF]( x, defaults=0, )
@@ -249,8 +257,16 @@ class ForEachCtrl extends Ctrl
 		
 		if( model )
 		{
-			const vdoms= this[MAKE_ROW]( model, );
-			const doms= vdoms.map( x=> x.toDOM( this[DOCUMENT], ), ).reduce( ( x, y, )=> x.concat( y, ), [], )
+			const doms= this[MAKE_DOMS]( model, );
+			
+			const old_i= this[ACTIVED_DOMS].indexOf( doms, );
+			if( old_i>=0 )
+			{
+				const placeholder= [ new Text( '', ), ];
+				
+				this[ACTIVED_DOMS].splice( old_i, 1, placeholder, );
+				this[ACTIVED_DOMS][old_i][0].before( ...placeholder, );
+			}
 			
 			this[ACTIVED_DOMS][i][0].before( ...doms, );
 			
