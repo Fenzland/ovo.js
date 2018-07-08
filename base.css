@@ -74,6 +74,9 @@ button
 code
 { font-family:monospace; }
 
+figure
+{ width:fit-content; }
+
 figcaption
 { text-align:center; }
 
