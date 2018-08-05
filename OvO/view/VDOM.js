@@ -135,7 +135,7 @@ export default class VDOM
 	{
 		if( value && (value.constructor === Object || value.constructor === EnumerableObject) )
 		{
-			this[SET_ATTRIBUTE]( 'style', mapValues( value, ( k, v, )=> `${k}:${v};`, ), );
+			this[SET_ATTRIBUTE]( 'style', mapValues( value, ( k, v, )=> `${k}:${v};`, ).join( '', ), );
 			
 			for( let k in value )
 			{
