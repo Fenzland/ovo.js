@@ -459,7 +459,7 @@ export class ArrayModel extends Model
 	
 	valueOf()
 	{
-		return this[ORIGIN][CHILDREN].concat();
+		return this[ORIGIN][CHILDREN].map( x=> x.valueOf(), );
 	}
 	
 	[SET_VALUE]( value, )
