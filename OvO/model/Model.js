@@ -477,13 +477,13 @@ export class ArrayModel extends Model
 				// paired, go next;
 				++orgI, ++newI;
 			else
-			if( 0 <= (pairedI= value.indexOf( this[ORIGIN][CHILDREN][orgI], newI, )) )
+			if( 0 <= (pairedI= value.indexOf( this[ORIGIN][CHILDREN][orgI].valueOf(), newI, )) )
 			{
 				// find next pair, insert middle new items;
-				const items= value.slice( newI, pairedI, );
+				const items= value.slice( newI, pairedI, ).map( x=> new Model( x, `${this[NAME]}`, ), );
 				
 				this[ORIGIN][CHILDREN].splice( orgI, 0, ...items, );
-				items.map( ( x, ii, )=> this[EMIT]( orgI- -ii, new Model( x, `${this[NAME]}`, ), ), );
+				items.forEach( ( x, ii, )=> this[EMIT]( orgI- -ii, x, ), );
 				
 				orgI-= newI - 1 - pairedI;
 				newI= pairedI - - 1;
@@ -498,10 +498,10 @@ export class ArrayModel extends Model
 		if( newI < value.length )
 		{
 			// insert remain new items.
-			const items= value.slice( newI, );
+			const items= value.slice( newI, ).map( x=> new Model( x, `${this[NAME]}`, ), );
 			
 			this[ORIGIN][CHILDREN].push( ...items, );
-			items.map( ( x, ii )=> this[EMIT]( orgI- -ii, new Model( x, `${this[NAME]}`, ), ), );
+			items.forEach( ( x, ii )=> this[EMIT]( orgI- -ii, x, ), );
 		}
 		
 		this.length.setValue( this[ORIGIN][CHILDREN].length, );
