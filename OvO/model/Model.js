@@ -5,11 +5,14 @@ const NAME= Symbol( 'name', );
 const CHILDREN= Symbol( 'children', );
 const VALUE= Symbol( 'value', );
 const LISTENERS= Symbol( 'listeners', );
+const DEPENDENCIES= Symbol( 'dependencies', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
 const OBJECT_VALUE= Symbol( 'object_value', );
 const LENGTH= Symbol( 'length', );
 const EMIT= Symbol( 'emit', );
+
+const rippling= new WeakMap();
 
 let id= 0;
 
@@ -110,6 +113,7 @@ export default class Model
 		
 		target[CHILDREN]= {};
 		target[LISTENERS]= [];
+		target[DEPENDENCIES]= [];
 		target[NAME]= name;
 		target[ORIGIN]= target;
 		
@@ -201,6 +205,14 @@ export default class Model
 	[EMIT]( value, originValue, )
 	{
 		this[ORIGIN][LISTENERS].forEach( listener=> listener( value, originValue, ), );
+		this[ORIGIN][DEPENDENCIES].forEach( dependency=> rippling.has( dependency.model, ) || rippling.set( dependency.model, dependency.callback, ), );
+		this[ORIGIN][DEPENDENCIES].forEach( dependency=> {
+			if( rippling.has( dependency.model, ) )
+			{
+				dependency.model.setValue( dependency.callback(), );
+				rippling.delete( dependency.model, );
+			}
+		}, );
 	}
 	
 	valueOf()
@@ -265,11 +277,10 @@ export default class Model
 		models.forEach(
 			model=> (
 				model instanceof Model &&
-				model.listenedBy(
-					()=> expression.setValue(
-						callback( ...models.map( x=> x instanceof Model? x.valueOf() : x, ), ),
-					)
-				)
+				model[DEPENDENCIES].push( {
+					model: expression,
+					callback: ()=> callback( ...models.map( x=> x instanceof Model? x.valueOf() : x, ), ),
+				}, )
 			),
 		);
 		
