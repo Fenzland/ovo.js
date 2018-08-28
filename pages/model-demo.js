@@ -2,6 +2,7 @@ import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
 import { If, ForEach, } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
+import AsyncData from '../OvO/model/AsyncData.js';
 import HTML, { header, main, form, fieldset, legend, label, input, button, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, } from '../OvO/view/HTML.js';
 import wait from '../OvO/support/wait.js';
 import $navs from './navs.widget.js';
@@ -129,20 +130,17 @@ function checkUsername( username, )
 	if(!( /^[a-zA-Z_]\w*$/.test( username, ) ))
 		return ' Only use "A-Z", "a-z", "0-9", "_" and not start with numbers.';
 	
-	const fakeOnlineChack= new Promise(
+	return new AsyncData(
 		( resolve, reject, )=> {
 			setTimeout( ()=> (
 				Math.random() > 0.3
 				? resolve( ` Username "${username}" is valid`, )
-				: reject()
+				: reject( 'Connection Error.' )
 			), 400, );
 		},
+		' Online chacking...',
+		' Connection Error.',
 	);
-	
-	fakeOnlineChack.temp= ' Online chacking...';
-	fakeOnlineChack.rejected= ' Connection Error.';
-	
-	return fakeOnlineChack;
 }
 
 function checkPassword( password, )
