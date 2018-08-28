@@ -148,10 +148,7 @@ export default class Model
 			
 			value.then(
 				x=> this.setValue( x, ),
-				e=> {
-					this.setValue( value.rejected, );
-					throw e;
-				},
+				e=> this.setValue( value.rejected, ),
 			);
 		}
 		else
