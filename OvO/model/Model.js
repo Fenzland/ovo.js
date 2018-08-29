@@ -4,7 +4,7 @@ const ID= Symbol( 'id', );
 const NAME= Symbol( 'name', );
 const CHILDREN= Symbol( 'children', );
 const VALUE= Symbol( 'value', );
-const LISTENERS= Symbol( 'listeners', );
+const OBSERVERS= Symbol( 'observers', );
 const DEPENDENCIES= Symbol( 'dependencies', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
@@ -52,7 +52,7 @@ function makeProxy( target, )
 					[ target[CHILDREN][key], value, ]= [ value.express( x=> x, ), target[CHILDREN][key], ];
 					
 					target[CHILDREN][key][CHILDREN]= value[CHILDREN];
-					target[CHILDREN][key][LISTENERS]= value[LISTENERS];
+					target[CHILDREN][key][OBSERVERS]= value[OBSERVERS];
 					
 					target[CHILDREN][key].setValue( target[CHILDREN][key].valueOf(), );
 				}
@@ -112,7 +112,7 @@ export default class Model
 			target= this
 		
 		target[CHILDREN]= {};
-		target[LISTENERS]= [];
+		target[OBSERVERS]= [];
 		target[DEPENDENCIES]= [];
 		target[NAME]= name;
 		target[ORIGIN]= target;
@@ -201,7 +201,7 @@ export default class Model
 	
 	[EMIT]( value, originValue, )
 	{
-		this[ORIGIN][LISTENERS].forEach( listener=> listener( value, originValue, ), );
+		this[ORIGIN][OBSERVERS].forEach( listener=> listener( value, originValue, ), );
 		this[ORIGIN][DEPENDENCIES].forEach( dependency=> rippling.has( dependency.model, ) || rippling.set( dependency.model, dependency.callback, ), );
 		this[ORIGIN][DEPENDENCIES].forEach( dependency=> {
 			if( rippling.has( dependency.model, ) )
@@ -254,9 +254,9 @@ export default class Model
 		}
 	}
 	
-	listenedBy( listener, )
+	observedBy( observer, )
 	{
-		this[ORIGIN][LISTENERS].push( listener, );
+		this[ORIGIN][OBSERVERS].push( observer, );
 	}
 	
 	express( callback, )
@@ -348,7 +348,7 @@ export class ArrayModel extends Model
 	{
 		const joined= new Model( this.valueOf().join( delimiter, ), );
 		
-		this.listenedBy( ()=> joined.setValue( this.valueOf().join( delimiter, ), ), );
+		this.observedBy( ()=> joined.setValue( this.valueOf().join( delimiter, ), ), );
 		
 		return joined;
 	}
@@ -401,7 +401,7 @@ export class ArrayModel extends Model
 	{
 		const m= new Model( this[CHILDREN].find( finder, ), `findFrom( ${this[NAME]}, )`, );
 		
-		this.listenedBy( ( index, model, )=> {
+		this.observedBy( ( index, model, )=> {
 			if( model && finder( model, ) )
 				m.setValue( model, );
 		}, );
@@ -413,7 +413,7 @@ export class ArrayModel extends Model
 	{
 		const m= new Model( this[CHILDREN].findIndex( finder, ), `findIndexFrom( ${this[NAME]}, )`, );
 		
-		this.listenedBy( ( index, model, )=> {
+		this.observedBy( ( index, model, )=> {
 			if( model && finder( model, ) )
 				m.setValue( index, );
 		}, );
@@ -517,7 +517,7 @@ export class ArrayModel extends Model
 	
 	[EMIT]( index, model, removed=undefined, )
 	{
-		this[ORIGIN][LISTENERS].forEach( listener=> listener( index, model, removed, ), );
+		this[ORIGIN][OBSERVERS].forEach( listener=> listener( index, model, removed, ), );
 		
 		return model;
 	}

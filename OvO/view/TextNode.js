@@ -9,7 +9,7 @@ export default class TextNode
 	{
 		if( content instanceof Model )
 		{
-			content.listenedBy( content=> this.updateContent( content, ), );
+			content.observedBy( content=> this.updateContent( content, ), );
 			
 			this.updateContent( content.valueOf(), );
 		}

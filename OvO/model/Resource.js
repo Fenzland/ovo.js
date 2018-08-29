@@ -128,7 +128,7 @@ export default class Resource extends Model
 		
 		load( this, );
 		
-		this.listenedBy( ()=> load( this, ), );
+		this.observedBy( ()=> load( this, ), );
 		
 		return this;
 	}

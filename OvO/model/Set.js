@@ -27,7 +27,7 @@ export default class Set extends ArrayModel
 		
 		this.forEach( x=> load( x, ), )
 		
-		this.listenedBy( ( i, x, )=> load( x, ), );
+		this.observedBy( ( i, x, )=> load( x, ), );
 		
 		return this;
 	}

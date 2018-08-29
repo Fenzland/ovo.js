@@ -89,7 +89,7 @@ export default class VDOM
 			if( this[DOM] )
 				this[DOM].className= className;
 			
-			value.listenedBy( ( i, x, r, )=> {
+			value.observedBy( ( i, x, r, )=> {
 				
 				this[ATTRIBUTES].set( 'class', value.valueOf().join( ' ', ), );
 				
@@ -110,7 +110,7 @@ export default class VDOM
 			if( this[DOM] )
 				this[DOM].className= value.valueOf();
 			
-			value.listenedBy( v=> this[DOM].className= v, );
+			value.observedBy( v=> this[DOM].className= v, );
 		}
 		else
 		if( Array.isArray( value, ) )
@@ -140,7 +140,7 @@ export default class VDOM
 			for( let k in value )
 			{
 				if( value[k] instanceof Model )
-					value[k].listenedBy( v=> {
+					value[k].observedBy( v=> {
 						if( this[DOM] )
 							this[DOM].style.setProperty( k, v, );
 					}, );
@@ -158,7 +158,7 @@ export default class VDOM
 		if( value instanceof Model )
 		{
 			this[SET_ATTRIBUTE]( attr, value.valueOf(), );
-			value.listenedBy( v=> this[SET_ATTRIBUTE]( attr, v, ), );
+			value.observedBy( v=> this[SET_ATTRIBUTE]( attr, v, ), );
 		}
 		else
 			this[SET_ATTRIBUTE]( attr, value, );

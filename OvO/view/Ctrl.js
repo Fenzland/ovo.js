@@ -34,7 +34,7 @@ class IfCtrl extends Ctrl
 		
 		this[MODEL]= model;
 		
-		model.listenedBy( ( v, o, )=> {
+		model.observedBy( ( v, o, )=> {
 			if( this.constructor[TO_BOOL]( v, ) ^ this.constructor[TO_BOOL]( o, ) )
 				this[UPDATE]( +this.constructor[TO_BOOL]( v, ), );
 		}, );
@@ -174,7 +174,7 @@ class ForEachCtrl extends Ctrl
 		this[MODEL]= model;
 		this[INDEXES]= new WeakMap;
 		
-		model.listenedBy( ( i, model, removed, )=> this[UPDATE]( i, model, removed, ), );
+		model.observedBy( ( i, model, removed, )=> this[UPDATE]( i, model, removed, ), );
 		
 		this[TEMPLATE]= template;
 		this[ROW_CACHE]= new WeakMap;
