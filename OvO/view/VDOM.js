@@ -35,7 +35,7 @@ export default class VDOM
 				this.fill( ...arg, );
 			else
 			// ITemplate: as a child
-			if( ITemplate.check( arg, ) )
+			if( arg instanceof ITemplate )
 				this.appendChild( arg, );
 			else
 			// Listener: listen
