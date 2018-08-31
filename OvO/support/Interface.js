@@ -7,10 +7,10 @@ export default class Interface
 		this[PROTO]= proto;
 	}
 	
-	check( object, )
+	[Symbol.hasInstance]( instance, )
 	{
 		for( let i in this[PROTO] )
-			if(!( object && object[i] && object[i] instanceof this[PROTO][i] ))
+			if(!( instance && instance[i] && instance[i] instanceof this[PROTO][i] ))
 				return false;
 		
 		return true;
