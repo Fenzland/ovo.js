@@ -107,10 +107,7 @@ export default class VDOM
 		{
 			this[ATTRIBUTES].set( 'class', value.valueOf(), );
 			
-			if( this[DOM] )
-				this[DOM].className= value.valueOf();
-			
-			value.observedBy( v=> this[DOM].className= v, );
+			value.observedBy( v=> this[DOM] && (this[DOM].className= v), true, );
 		}
 		else
 		if( Array.isArray( value, ) )
