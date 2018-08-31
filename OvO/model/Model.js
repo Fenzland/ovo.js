@@ -5,6 +5,7 @@ const NAME= Symbol( 'name', );
 const CHILDREN= Symbol( 'children', );
 const VALUE= Symbol( 'value', );
 const OBSERVERS= Symbol( 'observers', );
+const INIT_OBSERVER= Symbol( 'init_observer', );
 const DEPENDENCIES= Symbol( 'dependencies', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
@@ -254,9 +255,17 @@ export default class Model
 		}
 	}
 	
-	observedBy( observer, )
+	observedBy( observer, needInit=true, )
 	{
 		this[ORIGIN][OBSERVERS].push( observer, );
+		
+		if( needInit )
+			this[INIT_OBSERVER]( observer, );
+	}
+	
+	[INIT_OBSERVER]( observer, )
+	{
+		observer( this.valueOf(), undefined, );
 	}
 	
 	express( callback, )
@@ -515,11 +524,16 @@ export class ArrayModel extends Model
 		this.length.setValue( this[ORIGIN][CHILDREN].length, );
 	}
 	
-	[EMIT]( index, model, removed=undefined, )
+	[EMIT]( index, model, removed=null, )
 	{
 		this[ORIGIN][OBSERVERS].forEach( listener=> listener( index, model, removed, ), );
 		
 		return model;
+	}
+	
+	[INIT_OBSERVER]( observer, )
+	{
+		this[ORIGIN][CHILDREN].forEach( ( model, index, )=> observer( index, model, null, ), );
 	}
 }
 
