@@ -14,14 +14,14 @@
 					<dt>Username</dt>
 					<dd>
 						<input type="text" ovo:on-ninput="e=>m.username=e.target.value" />
-						<ovo:text model="m.username.express(x=>checkUsername(x,),)" />
+						<ovo:text model="m.username.$(x=>checkUsername(x,),)" />
 					</dd>
 				</label>
 				<label>
 					<dt>Password</dt>
 					<dd>
 						<input type="password" ovo:on-ninput="e=>m.password=e.target.value" />
-						<ovo:text model="m.password.express(x=>checkUsername(x,),)" />
+						<ovo:text model="m.password.$(x=>checkUsername(x,),)" />
 					</dd>
 				</label>
 				<ovo:if model="m.password">

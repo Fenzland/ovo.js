@@ -16,13 +16,13 @@ OvO PAGE
 						Username
 					-dd
 						-text %input(e,){>m.username=e.target.value;<}
-						-ovo:text <m.username.express( x=> checkUsername( x, ), )>
+						-ovo:text <m.username.$( x=> checkUsername( x, ), )>
 				-label
 					-dt
 						Password
 					-dd
-						-password %input(e,){>m.password=e.target.value;<} _(m.username.express(x=>x?`Password of ${x}`:'',))
-						-ovo:text <m.password.express( x=> checkPassword( x, ), )>
+						-password %input(e,){>m.password=e.target.value;<} _(m.username.$(x=>x?`Password of ${x}`:'',))
+						-ovo:text <m.password.$( x=> checkPassword( x, ), )>
 				~~if( m.password )
 					-label
 						-dt

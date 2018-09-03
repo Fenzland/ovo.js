@@ -50,7 +50,7 @@ export default new Page( {
 									input.text(
 										new Listener( 'input', e=> m.username=e.target.value ),
 									),
-									m.username.express( x=> checkUsername( x, ), ),
+									m.username.$( x=> checkUsername( x, ), ),
 								),
 							),
 							label(
@@ -58,9 +58,9 @@ export default new Page( {
 								dd(
 									input.password(
 										new Listener( 'input', e=> m.password=e.target.value ),
-										{ placeholder: m.username.express( x=> x?`Password of ${x}`:'', ), },
+										{ placeholder: m.username.$( x=> x?`Password of ${x}`:'', ), },
 									),
-									m.password.express( x=> checkPassword( x, ), ),
+									m.password.$( x=> checkPassword( x, ), ),
 								),
 							),
 							If( m.password, ).then(
@@ -70,7 +70,7 @@ export default new Page( {
 										input.password(
 											new Listener( 'input', e=> m.repeating=e.target.value ),
 										),
-										Model.express(
+										Model.$(
 											( x, y, )=> checkRepeating( x, y, ),
 											m.password,
 											m.repeating,

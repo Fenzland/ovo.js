@@ -144,7 +144,7 @@ export default class VDOM
 			}
 		}
 		else
-		if( value instanceof Model && value.isObject )
+		if( value instanceof Model && value.IS_OBJECT )
 			;
 		else
 			this[SET_ATTRIBUTE]( 'style', value, );
