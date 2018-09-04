@@ -52,12 +52,12 @@ export default class RePromise extends Promise
 	
 	catchOnce( $catch, )
 	{
-		return this.then( undefined, $catch, );
+		return this.thenOnce( undefined, $catch, );
 	}
 	
 	finallyOnce( $finally, )
 	{
-		return this.then( $finally, $finally, );
+		return this.thenOnce( $finally, $finally, );
 	}
 	
 	[RESOLVE]( data, )
@@ -69,9 +69,9 @@ export default class RePromise extends Promise
 		
 		if( this[THEN] )
 			try{
-				data= this[THEN]( data, )
-			}catch(e){
-				this[NEXTS].forEach( x=> x[REJECT]( e, ), );
+				data= this[THEN]( data, );
+			}catch( e ){
+				return this[NEXTS].forEach( x=> x[REJECT]( e, ), );
 			}
 		
 		this[NEXTS].forEach( x=> x[RESOLVE]( data, ), );
@@ -79,6 +79,20 @@ export default class RePromise extends Promise
 	
 	[REJECT]( e, )
 	{
-		this[NEXTS].forEach( x=> x[REJECT]( e, ), );
+		if( this[CATCH] )
+		{
+			try{
+				data= this[CATCH]( e, );
+			}catch( e ){
+				return this[NEXTS].forEach( x=> x[REJECT]( e, ), );
+			}
+			
+			this[NEXTS].forEach( x=> x[RESOLVE]( data, ), );
+		}
+		else
+		{
+			this[NEXTS].forEach( x=> x[REJECT]( e, ), );
+		}
+		
 	}
 }
