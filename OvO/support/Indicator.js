@@ -20,7 +20,7 @@ export class Indicator
 	
 	finally( ...args )
 	{
-		return this[PROMISE].catch( ...args, );
+		return this[PROMISE].finally( ...args, );
 	}
 }
 
@@ -58,6 +58,6 @@ export class ReIndicator
 	
 	finallyOnce( ...args )
 	{
-		return this[PROMISE].catchOnce( ...args, );
+		return this[PROMISE].finallyOnce( ...args, );
 	}
 }
