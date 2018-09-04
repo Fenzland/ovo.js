@@ -1,10 +1,12 @@
 import RePromise from './RePromise.js';
 const PROMISE= Symbol( 'promise', );
 
-export class Indicator
+export class Indicator extends Promise
 {
 	constructor()
 	{
+		super( ()=> {}, );
+		
 		this[PROMISE]= new Promise( ( resolve, reject, )=> { this.resolve= resolve; this.reject= reject; }, );
 	}
 	
@@ -24,10 +26,12 @@ export class Indicator
 	}
 }
 
-export class ReIndicator
+export class ReIndicator extends Promise
 {
 	constructor()
 	{
+		super( ()=> {}, );
+		
 		this[PROMISE]= new RePromise( ( resolve, reject, )=> { this.resolve= resolve; this.reject= reject; }, );
 	}
 	
