@@ -6,7 +6,7 @@ export default new Component( {
 	
 	name: 'table-sorter',
 	
-	template( array, field, )
+	render( { attributes:{ data, field, }, }, )
 	{
 		return [
 			' ',
@@ -16,14 +16,14 @@ export default new Component( {
 						class: 'up',
 						tabindex: -1,
 					},
-					new Listener( 'click', e=> array.sort( ( x, y, )=> compare( x[field], y[field], ), ), ),
+					new Listener( 'click', e=> data.sort( ( x, y, )=> compare( x[field], y[field], ), ), ),
 				),
 				HTML.button(
 					{
 						class: 'down',
 						tabindex: -1,
 					},
-					new Listener( 'click', e=> array.sort( ( x, y, )=> compare( y[field], x[field], ), ), ),
+					new Listener( 'click', e=> data.sort( ( x, y, )=> compare( y[field], x[field], ), ), ),
 				),
 			),
 			' ',

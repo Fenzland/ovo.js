@@ -89,7 +89,7 @@ export default new Page( {
 							Planet.fields.mapValues( ( name, field, )=> [
 								th(
 									field.label,
-									$sorter( planets, name, ),
+									$sorter( { data:planets, field:name, }, ),
 								),
 							], ),
 							th( 'actions', ),
