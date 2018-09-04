@@ -6,6 +6,7 @@ import Model, { ArrayModel, } from '../model/Model.js';
 
 const NAME= Symbol( 'name', );
 const NAMESPACE= Symbol( 'namespace', );
+const ARRANGE_ARGS= Symbol( 'arrange_args', );
 const CHILDREN= Symbol( 'children', );
 const ATTRIBUTES= Symbol( 'attributes', );
 const LISTENERS= Symbol( 'listeners', );
@@ -29,41 +30,22 @@ export default class VDOM
 	
 	fill( ...args )
 	{
-		for( let arg of args )
-			// Array: fill each
-			if( Array.isArray( arg, ) )
-				this.fill( ...arg, );
+		const argsTable= this.constructor.arrangeArgs( args, );
+		
+		for( let child of argsTable.children )
+			this.appendChild( child, );
+		
+		for( let listener of argsTable.listeners )
+			this[APPEND_LISTENER]( listener, );
+		
+		for( let attr in argsTable.attributes )
+			if( attr === 'class' )
+				this.setClass( argsTable.attributes[attr], );
 			else
-			// ITemplate: as a child
-			if( arg instanceof ITemplate )
-				this.appendChild( arg, );
+			if( attr === 'style' )
+				this.setStyle( argsTable.attributes[attr], );
 			else
-			// Listener: listen
-			if( arg && arg.constructor === Listener )
-				this[APPEND_LISTENER]( arg, );
-			else
-			// Plant Object: as attributes
-			if( arg && arg.constructor === Object )
-				for( let attr in arg )
-					if( attr === 'class' )
-						this.setClass( arg[attr], );
-					else
-					if( attr === 'style' )
-						this.setStyle( arg[attr], );
-					else
-						this.setAttribute( attr, arg[attr], );
-			else
-			// String: make a TextNode as a child
-			if( typeof arg === 'string' || (arg && arg.constructor === String) )
-				this.appendChild( new TextNode( arg, ), );
-			else
-			// Model: treat as a String
-			if( arg instanceof Model )
-				this.appendChild( new TextNode( arg, ), );
-			else
-			// other: convert to a String
-			if( arg || !isNaN( arg, ) )
-				this.appendChild( new TextNode( `${arg}`, ), );
+				this.setAttribute( attr, argsTable.attributes[attr], );
 		
 		return this;
 	}
@@ -283,13 +265,53 @@ export default class VDOM
 			callback( vdoms, );
 	}
 	
+	static arrangeArgs( args, )
+	{
+		return this[ARRANGE_ARGS]( args, );
+	}
+	
+	static [ARRANGE_ARGS]( args, table={ children:[], listeners:[], attributes:{}, }, )
+	{
+		for( let arg of args )
+			// Array: arrange each
+			if( Array.isArray( arg, ) )
+				this[ARRANGE_ARGS]( arg, table, );
+			else
+			// ITemplate: as a child
+			if( arg instanceof ITemplate )
+				table.children.push( arg, );
+			else
+			// Listener: listen
+			if( arg && arg.constructor === Listener )
+				table.listeners.push( arg, );
+			else
+			// Plant Object: as attributes
+			if( arg && arg.constructor === Object )
+				Object.assign( table.attributes, arg, );
+			else
+			// String: make a TextNode as a child
+			if( typeof arg === 'string' || (arg && arg.constructor === String) )
+				table.children.push( new TextNode( arg, ), );
+			else
+			// Model: treat as a String
+			if( arg instanceof Model )
+				table.children.push( new TextNode( arg, ), );
+			else
+			// other: convert to a String
+			if( arg || !isNaN( arg, ) )
+				table.children.push( new TextNode( `${arg}`, ), );
+		
+		return table;
+	}
+	
 	static diff( x, y, )
 	{
 		
 	}
 }
 
-export const create= VDOM.create;
-export const createNS= VDOM.createNS;
-export const forEach= VDOM.forEach;
-export const diff= VDOM.diff;
+export const create= VDOM.create.bind( VDOM, );
+export const createNS= VDOM.createNS.bind( VDOM, );
+export const forEach= VDOM.forEach.bind( VDOM, );
+export const arrangeArgs= VDOM.arrangeArgs.bind( VDOM, );
+export const diff= VDOM.diff.bind( VDOM, );
