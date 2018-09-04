@@ -20,12 +20,12 @@ export default class Router
 		this[ROUTES]= new Map;
 	}
 	
-	set pageDir( dir, )
+	set pageDir( dir )
 	{
 		this[PAGE_DIR]= dir;
 	}
 	
-	set basePath( path, )
+	set basePath( path )
 	{
 		this[BASE_PATH]= path;
 	}

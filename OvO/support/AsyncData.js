@@ -31,7 +31,7 @@ export default class AsyncData extends Promise
 			return this[REJECTED];
 	}
 	
-	set rejected( rejected, )
+	set rejected( rejected )
 	{
 		this[REJECTED]= rejected
 	}
