@@ -1,5 +1,5 @@
 import Resource from '../OvO/model/Resource.js';
-import { resolveHere, } from '../OvO/support/path.js';
+import { resolve, } from '../OvO/support/path.js';
 
 export default class Planet extends Resource
 {
@@ -21,7 +21,7 @@ export default class Planet extends Resource
 	static query()
 	{
 		return this.makeSet(
-			fetch( resolveHere( '../data/planets.json', ), ).then( resp=> resp.json(), ),
+			fetch( resolve( '../data/planets.json', ), ).then( resp=> resp.json(), ),
 		);
 	}
 }
