@@ -2,12 +2,13 @@ import Listener from '../OvO/view/Listener.js';
 import { If, ForEach, } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
 import AsyncData from '../OvO/support/AsyncData.js';
-import HTML, { header, main, form, fieldset, legend, label, input, button, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, } from '../OvO/view/HTML.js';
+import HTML, { header, main, form, fieldset, legend, label, input, button, h1, dl, dt, dd, table, caption, thead, tbody, tr, th, td, a, } from '../OvO/view/HTML.js';
 import wait from '../OvO/support/wait.js';
 import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
 import $sorter from './sorter.component.js';
 import Planet from '../resources/Planet.js';
+import router from '../routes/index.js';
 
 
 export function render()
@@ -102,6 +103,11 @@ export function render()
 								button(
 									new Listener( 'click', e=> planets.remove( planet, ), ),
 									'remove',
+								),
+								' ',
+								a(
+									{ href:router.linkTo( 'planet', { planet:planet.id, }, ), },
+									'info',
 								),
 							),
 						),
