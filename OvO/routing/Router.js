@@ -164,16 +164,21 @@ export default class Router
 		// 404
 	}
 	
-	[RENDER]( route, matches, query, anchor, )
+	[RENDER]( route, params, query, anchor, )
 	{
 		const blocker= route.gates.reduce( ( blocker, gate, )=> blocker || (gate.validate()? null : gate), null, )
 		const page= (blocker||route).page;
 		
 		// Render the PAGE and update the VIEW (async)
 		import(resolve( this[PAGE_DIR], page+'.js')).then(
-			page=> this.view.update(
-				page.default.render( matches, query, anchor, ),
-			),
+			page=> {
+				if(!( page.render && page.render instanceof Function ))
+					throw new Error( 'A page must export function render()', );
+				
+				this.view.update(
+					page.render( { params, query, anchor, }, ),
+				);
+			},
 		);
 	}
 }
