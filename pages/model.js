@@ -1,4 +1,3 @@
-import Page from '../OvO/view/Page.js';
 import { header, footer, main, article, div, h1, h2, p, small, a, code, } from '../OvO/view/HTML.js';
 import router from '../routes/index.js';
 import $navs from './navs.widget.js';
@@ -45,33 +44,27 @@ const contents= [
 	),
 ];
 
-export default new Page( {
-	
-	name: 'introduce',
-	
-	render()
-	{
-		return [
-			header(
-				h1( 'Model', ),
-				$navs,
-			),
-			main(
-				article(
-					contents,
-					footer(
-						a(
-							// Todo make a link with a state as href to travel history.
-							{ href:'javascript:history.back();', },
-							'<<< Back Home',
-						),
+export function render()
+{
+	return [
+		header(
+			h1( 'Model', ),
+			$navs,
+		),
+		main(
+			article(
+				contents,
+				footer(
+					a(
+						// Todo make a link with a state as href to travel history.
+						{ href:'javascript:history.back();', },
+						'<<< Back Home',
 					),
 				),
 			),
-			$footer,
-		];
-	},
-	
-} );
+		),
+		$footer,
+	];
+}
 
 export const summary= contents.slice( 1, 2, );

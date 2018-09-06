@@ -1,4 +1,3 @@
-import Page from '../OvO/view/Page.js';
 import Listener from '../OvO/view/Listener.js';
 import { If, ForEach, } from '../OvO/view/Ctrl.js';
 import Model from '../OvO/model/Model.js';
@@ -11,112 +10,108 @@ import $sorter from './sorter.component.js';
 import Planet from '../resources/Planet.js';
 
 
-export default new Page( {
-	name: 'model-demo',
+export function render()
+{
+	const m= new Model( {
+		title: '',
+		username: '',
+		password: '',
+		repeating: '',
+	}, );
 	
-	render()
-	{
-		const m= new Model( {
-			title: '',
-			username: '',
-			password: '',
-			repeating: '',
-		}, );
-		
-		const planets= Planet.query();
-		
-		(async ( str, interval, )=> {
-			for( let i= 0; i <= str.length; ++i )
-			{
-				m.title= str.slice( 0, i, ) + '.';
-				
-				await wait( interval, );
-			}
-		})( 'OvO view model demo', 250, );
-		
-		return [
-			header(
-				h1( m.title, { style:'font-family:monospace;', } ),
-				$navs,
-			),
-			main(
-				form(
-					fieldset(
-						legend( 'Model Binding', ),
-						dl(
-							label(
-								dt( 'Username', ),
-								dd(
-									input.text(
-										new Listener( 'input', e=> m.username=e.target.value ),
-									),
-									m.username.$( x=> checkUsername( x, ), ),
+	const planets= Planet.query();
+	
+	(async ( str, interval, )=> {
+		for( let i= 0; i <= str.length; ++i )
+		{
+			m.title= str.slice( 0, i, ) + '.';
+			
+			await wait( interval, );
+		}
+	})( 'OvO view model demo', 250, );
+	
+	return [
+		header(
+			h1( m.title, { style:'font-family:monospace;', } ),
+			$navs,
+		),
+		main(
+			form(
+				fieldset(
+					legend( 'Model Binding', ),
+					dl(
+						label(
+							dt( 'Username', ),
+							dd(
+								input.text(
+									new Listener( 'input', e=> m.username=e.target.value ),
 								),
+								m.username.$( x=> checkUsername( x, ), ),
 							),
+						),
+						label(
+							dt( 'Password', ),
+							dd(
+								input.password(
+									new Listener( 'input', e=> m.password=e.target.value ),
+									{ placeholder: m.username.$( x=> x?`Password of ${x}`:'', ), },
+								),
+								m.password.$( x=> checkPassword( x, ), ),
+							),
+						),
+						If( m.password, ).then(
 							label(
-								dt( 'Password', ),
+								dt( 'Repeat Password', ),
 								dd(
 									input.password(
-										new Listener( 'input', e=> m.password=e.target.value ),
-										{ placeholder: m.username.$( x=> x?`Password of ${x}`:'', ), },
+										new Listener( 'input', e=> m.repeating=e.target.value ),
 									),
-									m.password.$( x=> checkPassword( x, ), ),
-								),
-							),
-							If( m.password, ).then(
-								label(
-									dt( 'Repeat Password', ),
-									dd(
-										input.password(
-											new Listener( 'input', e=> m.repeating=e.target.value ),
-										),
-										Model.$(
-											( x, y, )=> checkRepeating( x, y, ),
-											m.password,
-											m.repeating,
-										),
+									Model.$(
+										( x, y, )=> checkRepeating( x, y, ),
+										m.password,
+										m.repeating,
 									),
 								),
 							),
 						),
-					),
-				),
-				table(
-					caption( 'Planets (', planets.length, ')', ),
-					thead(
-						tr(
-							th( 'index', ),
-							Planet.fields.mapValues( ( name, field, )=> [
-								th(
-									field.label,
-									$sorter( { data:planets, field:name, }, ),
-								),
-							], ),
-							th( 'actions', ),
-						),
-					),
-					tbody(
-						ForEach( planets, ( planet, i, )=> [
-							tr(
-								td( i, ),
-								Planet.fields.mapValues( ( name, field, )=> [
-									td( planet[name], ),
-								] ),
-								td(
-									button(
-										new Listener( 'click', e=> planets.remove( planet, ), ),
-										'remove',
-									),
-								),
-							),
-						], ),
 					),
 				),
 			),
-			$footer,
-		];
-	}
-} );
+			table(
+				caption( 'Planets (', planets.length, ')', ),
+				thead(
+					tr(
+						th( 'index', ),
+						Planet.fields.mapValues( ( name, field, )=> [
+							th(
+								field.label,
+								$sorter( { data:planets, field:name, }, ),
+							),
+						], ),
+						th( 'actions', ),
+					),
+				),
+				tbody(
+					ForEach( planets, ( planet, i, )=> [
+						tr(
+							td( i, ),
+							Planet.fields.mapValues( ( name, field, )=> [
+								td( planet[name], ),
+							] ),
+							td(
+								button(
+									new Listener( 'click', e=> planets.remove( planet, ), ),
+									'remove',
+								),
+							),
+						),
+					], ),
+				),
+			),
+		),
+		$footer,
+	];
+}
 
 
 function checkUsername( username, )
