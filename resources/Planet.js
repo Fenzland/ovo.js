@@ -21,9 +21,23 @@ export default class Planet extends Resource
 	static query()
 	{
 		return this.makeSet(
-			fetch( resolve( '../data/planets.json', ), ).then( resp=> resp.json(), ),
+			query(),
+		);
+	}
+	
+	static find( key, )
+	{
+		return this.makeInstance(
+			query().then( data=> data.find( datum=> datum.id === key, ), ),
+			{ id: 0,   name: 'Loading...', mass: '-', diameter: '-', semi_major_axis: '-', orbital_period: '-', orbital_eccentricity: '-', rotation_period: '-', moons: '-', },
+			{ id: NaN, name: 'Not Find',   mass: '-', diameter: '-', semi_major_axis: '-', orbital_period: '-', orbital_eccentricity: '-', rotation_period: '-', moons: '-', },
 		);
 	}
 }
 
 Planet.boot();
+
+function query()
+{
+	return fetch( resolve( '../data/planets.json', ), ).then( resp=> resp.json(), );
+}
