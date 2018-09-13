@@ -1,81 +1,115 @@
 import session from '../support/session.js';
 
+const INIT= Symbol( 'init', );
+const WINDOW= Symbol( 'window', );
 const SESSION= Symbol( 'session', );
+const STORE_SESSION= Symbol( 'store_session', );
 const LOAD_FROM_SESSION= Symbol( 'load_from_session', );
-const HEAD= Symbol( 'head', );
+const INDEX= Symbol( 'index', );
 const STATES= Symbol( 'states', );
 const URL= Symbol( 'url', );
 const ROUTE_NAME= Symbol( 'route_name', );
 
 export default class History
 {
-	constructor()
+	constructor( window, initRoute, )
 	{
+		this[WINDOW]= window;
 		this[SESSION]= session( 'history', );
 		
-		if( this[SESSION].has( 'history', ) )
-			this[LOAD_FROM_SESSION]();
+		if(!( this[SESSION].has( 'history', ) && this[LOAD_FROM_SESSION]() ) )
+			this[INIT]( initRoute, );
 		
-		this[STATES]= [];
+		window.addEventListener( 'beforeunload', e=> this[STORE_SESSION](), );
 	}
 	
-	push( state, )
+	push( route, url, )
 	{
-		if( this[HEAD] )
-			state[HEAD]= this[HEAD];
+		++this[INDEX];
 		
-		this[HEAD]= state;
+		const state= { index: this[INDEX], route, url, };
 		
-		this[STATES].push( state, );
+		this[STATES].splice( this[INDEX], Infinity, state, );
+		
+		this[WINDOW].history.pushState( state, '', url, );
+	}
+	
+	get states()
+	{
+		return this[STATES].concat();
+	}
+	
+	get past()
+	{
+		return this[STATES].slice( 0, this[INDEX], );
+	}
+	
+	get future()
+	{
+		return this[STATES].slice( this[INDEX] - - 1, Infinity, );
+	}
+	
+	get current()
+	{
+		return this[STATES][this[INDEX]];
 	}
 	
 	moveTo( state, )
 	{
-		
+		this[INDEX]= state.index;
 	}
 	
-	match( routeName, index=0, )
+	goTo( state, )
 	{
-		let head= this[HEAD];
+		this[WINDOW].history.go( state.index - this[INDEX], );
+	}
+	
+	find( route, offset=0, )
+	{
+		return this[STATES].find( ( state, index, )=> index>=offset && state.route===route, );
+	}
+	
+	findInPast( route, )
+	{
+		return this.past.reverse().find( state=> state.route===route, );
+	}
+	
+	findInFuture( route, )
+	{
+		return this.future.find( state=> state.route===route, );
+	}
+	
+	[INIT]( route, )
+	{
+		const state= {
+			index: 0,
+			route,
+			url: this[WINDOW].location.href,
+		};
 		
-		while( index<0 && head )
-		{
-			head= head[HEAD];
-			
-			++index;
-		}
-		
-		return head && head[ROUTE_NAME]===routeName;
+		this[STATES]= [ state, ];
+		this[INDEX]= 0;
+		this[WINDOW].history.replaceState( state, '', state.url, );
+	}
+	
+	[STORE_SESSION]()
+	{
+		this[SESSION].set( 'history', {
+			states: this[STATES],
+			index: this[INDEX],
+		}, );
 	}
 	
 	[LOAD_FROM_SESSION]()
 	{
-		const fromSession= this[SESSION].get( 'history', );
+		const stored= this[SESSION].get( 'history', );
 		
-		fromSession.forEach()
-	}
-}
-
-export class State
-{
-	constructor( url, routeName, )
-	{
-		this[URL]= url;
-		this[ROUTE_NAME]= routeName;
-	}
-	
-	toString()
-	{
-		return this.url;
-	}
-	
-	get url()
-	{
-		return this[URL];
-	}
-	
-	get routeName()
-	{
-		return this[ROUTE_NAME];
+		if(!( stored && stored.states && stored.states.length ))
+			return false;
+		
+		this[STATES]= stored.states.concat();
+		this[INDEX]= stored.index;
+		
+		return true;
 	}
 }
