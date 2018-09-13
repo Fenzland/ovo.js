@@ -1,6 +1,6 @@
 const ROUTER= Symbol( 'router', );
 const ROUTE= Symbol( 'route', );
-const URL= Symbol( 'url', );
+const URL_OBJ= Symbol( 'url_obj', );
 
 export default class Link extends Function
 {
@@ -10,7 +10,7 @@ export default class Link extends Function
 		
 		this[ROUTER]= router;
 		this[ROUTE]= route;
-		this[URL]= url;
+		this[URL_OBJ]= new URL( url, window.location, );
 		
 		return new Proxy( this, {
 			apply( target, context, args, )
@@ -25,9 +25,29 @@ export default class Link extends Function
 		return this.url;
 	}
 	
+	get urlObj()
+	{
+		return this[URL_OBJ];
+	}
+	
 	get url()
 	{
-		return this[URL];
+		return this[URL_OBJ].href;
+	}
+	
+	get path()
+	{
+		return this[URL_OBJ].pathname;
+	}
+	
+	get query()
+	{
+		return this[URL_OBJ].searchParams;
+	}
+	
+	get anchor()
+	{
+		return this[URL_OBJ].hash;
 	}
 	
 	active()
