@@ -1,6 +1,6 @@
 import Route from './Route.js';
 import Link from './Link.js';
-import History, { State, } from './History.js';
+import History from './History.js';
 import View from '../view/View.js';
 import { resolve, } from '../support/path.js';
 
@@ -16,7 +16,6 @@ export default class Router
 {
 	constructor()
 	{
-		this[HISTORY]= new History;
 		this[ROUTES]= new Map;
 	}
 	
@@ -70,18 +69,15 @@ export default class Router
 	 */
 	listen( window, )
 	{
-		this[WINDOW]= window;
-		
-		window.addEventListener( 'popstate', e=>{
-			this[HISTORY].moveTo( e.state );
-			this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
-		}, );
-		
 		const route= this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
 		
-		this[HISTORY].push(
-			new State( window.location.href, route.name, ),
-		);
+		this[WINDOW]= window;
+		this[HISTORY]= new History( window, route.name, );
+		
+		window.addEventListener( 'popstate', e=>{
+			this[HISTORY].moveTo( e.state, );
+			this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
+		}, );
 	}
 	
 	/**
@@ -111,15 +107,12 @@ export default class Router
 	 */
 	goto( link, )
 	{
-		const route= this[DISPATCH]( link.url, '', '', );
+		const route= this[DISPATCH]( link.path, '', '', );
 		
 		if(!( route )) return false;
 		
-		const state= new State( link.url, route.name, );
 		
-		this.history.push( state, );
-		
-		this[WINDOW].history.pushState( state, '', link.url, );
+		this[HISTORY].push( route.name, link.url, );
 		
 		return true;
 	}
