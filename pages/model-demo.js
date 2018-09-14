@@ -106,7 +106,7 @@ export function render()
 								),
 								' ',
 								a(
-									{ href:router.linkTo( 'planet', { planet:planet.id, }, ), },
+									{ href:router.linkTo( '.planet', { planet:planet.id, }, ), },
 									'info',
 								),
 							),

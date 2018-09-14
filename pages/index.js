@@ -57,7 +57,7 @@ export function render()
 					),
 					ef( '&ensp;', ),
 					a(
-						{ href:router.linkTo( 'model-demo', ), },
+						{ href:router.linkTo( 'model_demo', ), },
 						'Demo',
 					),
 				),
