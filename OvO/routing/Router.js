@@ -8,6 +8,7 @@ const BASE_PATH= Symbol( 'base_path', );
 const PAGE_DIR= Symbol( 'page_dir', );
 const HISTORY= Symbol( 'history', );
 const ROUTES= Symbol( 'routes', );
+const VIEW= Symbol( 'view', );
 const WINDOW= Symbol( 'window', );
 const DISPATCH= Symbol( 'dispatch', );
 const CURRENT= Symbol( 'current', );
@@ -73,7 +74,7 @@ export default class Router
 	 */
 	showIn( container, )
 	{
-		this.view= new View( container, );
+		this[VIEW]= new View( container, );
 	}
 	
 	/**
@@ -200,11 +201,10 @@ export default class Router
 				if(!( page.render && page.render instanceof Function ))
 					throw new Error( 'A page must export function render()', );
 				
-				this.view.update(
+				this[VIEW].update(
 					page.render( { params, query, anchor, }, ),
 				);
 			},
 		);
 	}
 }
-
