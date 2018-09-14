@@ -42,6 +42,11 @@ export function extname( path, )
 		return `.${ext}`;
 }
 
+export function isAbsolute( path, )
+{
+	return path.startsWith( '/', ) || !!path.match( /\w+:\/\//, );
+}
+
 export function resolve( ...paths )
 {
 	standardizeResolvingPaths( paths, );
@@ -66,10 +71,10 @@ export function resolve( ...paths )
 function standardizeResolvingPaths( paths, )
 {
 	for( let i= paths.length - 1; i>=0; --i )
-		if( paths[i][0]==='/' )
+		if( isAbsolute( paths[i], ) )
 			return (paths.splice( 0, i, ), undefined);
 	
-	paths.unshift( dirname( new URL( pathFromErrorStack(3), ).pathname, ), );
+	paths.unshift( dirname( new URL( pathFromErrorStack( 3, ), ).pathname, ), );
 }
 
 export default {
