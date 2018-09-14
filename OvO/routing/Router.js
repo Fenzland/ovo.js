@@ -181,9 +181,11 @@ export default class Router
 			
 			if( matches )
 			{
+				this[CURRENT]= route;
+				
 				this[RENDER]( route, matches, query, anchor, );
 				
-				return this[CURRENT]= route;
+				return route;
 			}
 		}
 		
