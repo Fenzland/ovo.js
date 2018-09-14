@@ -60,12 +60,13 @@ export default class Route
 		return this[PATTERN].replace( /\{(\w+)(?:\:(\w+))?\}/g, ( replaced, name, )=> param[name]||'', );
 	}
 	
-	gatedBy( gate, )
+	gatedBy( ...gates )
 	{
-		if(!( gate instanceof Gate ))
-			throw 'route must be gated by a gate.'
+		for( let gate of gates )
+			if(!( gate instanceof Gate ))
+				throw 'route must be gated by a gate.'
 		
-		this[GATES].push( gate, );
+		this[GATES].push( ...gates, );
 		
 		return this;
 	}
