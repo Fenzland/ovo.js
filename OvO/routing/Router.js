@@ -114,7 +114,7 @@ export default class Router
 		if(!( route ))
 			throw `Route ${routeName} is not defiend.`;
 		
-		return route.link( this, params, );
+		return route.buildLink( this, params, );
 	}
 	
 	resolve( base, name, )

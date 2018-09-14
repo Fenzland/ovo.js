@@ -79,7 +79,7 @@ export default class Route
 	 * 
 	 * @return Link
 	 */
-	link( router, params, )
+	buildLink( router, params, )
 	{
 		return new Link( router, this.makePath( params, ), );
 	}
