@@ -81,7 +81,7 @@ export default class Route
 	 */
 	link( router, params, )
 	{
-		return new Link( router, this, this.makePath( params, ), );
+		return new Link( router, this.makePath( params, ), );
 	}
 	
 	get name()
