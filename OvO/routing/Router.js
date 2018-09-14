@@ -153,11 +153,6 @@ export default class Router
 		this[DISPATCH]( this[WINDOW].location.pathname, this[WINDOW].location.search, this[WINDOW].location.hash, );
 	}
 	
-	match( routeName, index=0, )
-	{
-		return this[HISTORY].match( routeName, index, );
-	}
-	
 	get history()
 	{
 		return this[HISTORY];
