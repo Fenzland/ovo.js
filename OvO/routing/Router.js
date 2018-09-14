@@ -69,7 +69,7 @@ export default class Router
 	 * 
 	 * @param Element container
 	 * 
-	 * @return viod
+	 * @return void
 	 */
 	showIn( container, )
 	{
@@ -81,7 +81,7 @@ export default class Router
 	 * 
 	 * @param Window window
 	 * 
-	 * @return viod
+	 * @return void
 	 */
 	listen( window, )
 	{
@@ -133,7 +133,7 @@ export default class Router
 	 * 
 	 * @param Link link
 	 * 
-	 * @return viod
+	 * @return void
 	 */
 	goto( link, )
 	{
