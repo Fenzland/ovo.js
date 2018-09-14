@@ -25,22 +25,43 @@ export default class Router
 	}
 	
 	/**
-	 * Route a path pattern to a PAGE.
+	 * Set a DOM as route container. and create a VIEW.
 	 * 
-	 * @param String name
-	 * @param String pattern
-	 * @param String page
+	 * @param String params.[name]
+	 * @param String params.*.path
+	 * @param String params.*.page
+	 * @param String params.*.title
+	 * @param Array  params.*.gates
+	 * @param Object params.*.follow
+	 * 
+	 * @param String options.*.preName
+	 * @param String options.*.prePath
+	 * @param String options.*.prePage
+	 * @param Array  options.*.preGates
+	 * 
+	 * @return void
 	 */
-	route( name, pattern, page=undefined, )
+	route( params, { preName='', prePath=this[BASE_PATH], prePage=this[PAGE_DIR], preGates=[], }={}, )
 	{
-		if( this[BASE_PATH] )
-			pattern= `${this[BASE_PATH]}${pattern}`;
-		
-		const route= new Route( name, pattern, page||name, );
-		
-		this[ROUTES].set( name, route, );
-		
-		return route;
+		for( let name in params )
+		{
+			const param= params[name];
+			let { path, page=name, title=name, gates=[], follow, }= typeof param ==='string'? { path:param, } : param;
+			
+			if( preName ) name= `${preName}.${name}`;
+			if( prePath ) path= `${prePath}${path}`;
+			if( prePage ) page= resolve( prePage, page, );
+			if( preGates ) gates.push( ...preGates, );
+			
+			const route= new Route( name, title, path, page, );
+			
+			route.gatedBy( ...gates, );
+			
+			this[ROUTES].set( name, route, );
+			
+			if( follow )
+				this.route( follow, { preName:name, prePath:path, prePage:page, preGates:gates, }, );
+		}
 	}
 	
 	/**
