@@ -190,21 +190,19 @@ export default class Router
 		// 404
 	}
 	
-	[RENDER]( route, params, query, anchor, )
+	async [RENDER]( route, params, query, anchor, )
 	{
 		const blocker= route.gates.reduce( ( blocker, gate, )=> blocker || (gate.validate()? null : gate), null, )
-		const page= (blocker||route).page;
+		const pageName= (blocker||route).page;
 		
 		// Render the PAGE and update the VIEW (async)
-		import(resolve( this[PAGE_DIR], page.replace( /^\//, '', )+'.js')).then(
-			page=> {
-				if(!( page.render && page.render instanceof Function ))
-					throw new Error( 'A page must export function render()', );
-				
-				this[VIEW].update(
-					page.render( { params, query, anchor, }, ),
-				);
-			},
+		const page= await import(resolve( this[PAGE_DIR], pageName.replace( /^\//, '', )+'.js'))
+		
+		if(!( page.render && page.render instanceof Function ))
+			throw new Error( 'A page must export function render()', );
+		
+		this[VIEW].update(
+			page.render( { params, query, anchor, }, ),
 		);
 	}
 }
