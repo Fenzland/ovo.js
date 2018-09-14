@@ -10,6 +10,7 @@ const HISTORY= Symbol( 'history', );
 const ROUTES= Symbol( 'routes', );
 const WINDOW= Symbol( 'window', );
 const DISPATCH= Symbol( 'dispatch', );
+const CURRENT= Symbol( 'current', );
 const RENDER= Symbol( 'render', );
 
 export default class Router
@@ -132,6 +133,11 @@ export default class Router
 		return this[HISTORY];
 	}
 	
+	get current()
+	{
+		return this[CURRENT];
+	}
+	
 	/**
 	 * Dispatch with url.
 	 * 
@@ -150,7 +156,7 @@ export default class Router
 				
 				this[RENDER]( route, matches, query, anchor, );
 				
-				return route;
+				return this[CURRENT]= route;
 			}
 		}
 		
