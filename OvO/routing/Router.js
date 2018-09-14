@@ -2,7 +2,7 @@ import Route from './Route.js';
 import Link from './Link.js';
 import History from './History.js';
 import View from '../view/View.js';
-import { resolve, } from '../support/path.js';
+import { resolve, traceBack, dirname, } from '../support/path.js';
 
 const BASE_PATH= Symbol( 'base_path', );
 const PAGE_DIR= Symbol( 'page_dir', );
@@ -15,19 +15,13 @@ const RENDER= Symbol( 'render', );
 
 export default class Router
 {
-	constructor()
+	constructor( basePath, pageDIr, )
 	{
+		const baseOn= dirname( traceBack(), );
+		
+		this[BASE_PATH]= new URL( resolve( baseOn, basePath, ), ).pathname.replace( /\/$/, '', );
+		this[PAGE_DIR]= resolve( baseOn, pageDIr, );
 		this[ROUTES]= new Map;
-	}
-	
-	set pageDir( dir )
-	{
-		this[PAGE_DIR]= dir;
-	}
-	
-	set basePath( path )
-	{
-		this[BASE_PATH]= path;
 	}
 	
 	/**
