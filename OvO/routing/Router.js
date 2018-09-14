@@ -2,7 +2,7 @@ import Route from './Route.js';
 import Link from './Link.js';
 import History from './History.js';
 import View from '../view/View.js';
-import { resolve, traceBack, dirname, } from '../support/path.js';
+import { resolve, traceBack, dirname, current, } from '../support/path.js';
 
 const BASE_PATH= Symbol( 'base_path', );
 const PAGE_DIR= Symbol( 'page_dir', );
@@ -189,7 +189,18 @@ export default class Router
 			}
 		}
 		
-		// 404
+		{
+			const route404= this[ROUTES].achieve(
+				'404',
+				()=> new Route( '404', 'Not Found', '', resolve( dirname( current(), ), './404.page', ), ),
+			);
+			
+			this[CURRENT]= route404;
+			
+			this[RENDER]( route404, {}, query, anchor, );
+			
+			return route404;
+		}
 	}
 	
 	async [RENDER]( route, params, query, anchor, )
