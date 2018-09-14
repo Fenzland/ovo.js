@@ -180,9 +180,6 @@ export default class Router
 			
 			if( matches )
 			{
-				// show loading.
-				this.view.loading();
-				
 				this[RENDER]( route, matches, query, anchor, );
 				
 				return this[CURRENT]= route;
