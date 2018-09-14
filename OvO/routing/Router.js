@@ -42,7 +42,7 @@ export default class Router
 	 * 
 	 * @return void
 	 */
-	route( params, { preName='', prePath=this[BASE_PATH], prePage=this[PAGE_DIR], preGates=[], }={}, )
+	route( params, { preName='', prePath=this[BASE_PATH], prePage='', preGates=[], }={}, )
 	{
 		for( let name in params )
 		{
@@ -196,7 +196,7 @@ export default class Router
 		const page= (blocker||route).page;
 		
 		// Render the PAGE and update the VIEW (async)
-		import(resolve( this[PAGE_DIR], page+'.js')).then(
+		import(resolve( this[PAGE_DIR], page.replace( /^\//, '', )+'.js')).then(
 			page=> {
 				if(!( page.render && page.render instanceof Function ))
 					throw new Error( 'A page must export function render()', );
