@@ -2,6 +2,7 @@ import Link from './Link.js';
 import Gate from './Gate.js';
 
 const NAME= Symbol( 'name', );
+const TITLE= Symbol( 'title', );
 const ATTRIBUTES= Symbol( 'attributes', );
 const PATTERN= Symbol( 'pattern', );
 const REG_PATTERN= Symbol( 'reg_pattern', );
@@ -19,12 +20,14 @@ export default class Route
 {
 	/**
 	 * @param String name
+	 * @param String title
 	 * @param String pattern
 	 * @param String page
 	 */
-	constructor( name, pattern, page, )
+	constructor( name, title, pattern, page, )
 	{
 		this[NAME]= name;
+		this[TITLE]= title;
 		this[PATTERN]= pattern;
 		[ this[REG_PATTERN], this[ATTRIBUTES], ]= parsePattern( pattern, );
 		this[PAGE]= page;
@@ -83,6 +86,11 @@ export default class Route
 	get name()
 	{
 		return this[NAME];
+	}
+	
+	get title()
+	{
+		return this[TITLE];
 	}
 	
 	get page()
