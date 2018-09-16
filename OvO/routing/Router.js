@@ -16,7 +16,7 @@ const RENDER= Symbol( 'render', );
 
 export default class Router
 {
-	constructor( basePath, pageDIr, )
+	constructor( basePath='/', pageDIr='/pages', )
 	{
 		const baseOn= dirname( traceBack(), );
 		
