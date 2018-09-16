@@ -1,6 +1,6 @@
 import Router from '../OvO/routing/Router.js';
 
-const router= new Router( '..', '../pages', );
+const router= new Router();
 
 router.route( {
 	home: { path: '/', page: 'index', },
