@@ -9,13 +9,13 @@ router.route( {
 	model_demo: {
 		path: '/model-demo',
 		page: 'model-demo',
-		follow: {
+		follows: {
 			planet: {
 				path: '/planets/{planet:Int}',
 				page: '/planet',
 			},
 		},
-	}
+	},
 }, );
 
 export default router;
