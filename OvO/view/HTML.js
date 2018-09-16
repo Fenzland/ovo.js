@@ -43,7 +43,6 @@ const Tags= {
 	        wbr: ( ...args )=> create(        'wbr', ...args, ).empty(),
 	       abbr: ( ...args )=> create(       'abbr', ...args, ),
 	    address: ( ...args )=> create(    'address', ...args, ),
-	       area: ( ...args )=> create(       'area', ...args, ).empty(),
 	      audio: ( ...args )=> create(      'audio', ...args, ),
 	          b: ( ...args )=> create(          'b', ...args, ),
 	       base: ( ...args )=> create(       'base', ...args, ).empty(),
@@ -125,14 +124,15 @@ const Tags= {
 	},
 	button: (()=> {
 		const button= ( ...args )=> create( 'button', ...args, { type:'button', }, );
-		button.submit= createLinkTag( 'button', 'formaction', 'click', { type:'submit', }, );
+		button.submit= createLinkTag( 'button', 'formaction', 'click', false, { type:'submit', }, );
 		return button;
 	})(),
 	a: createLinkTag( 'a', 'href', 'click', ),
+	area: createLinkTag( 'area', 'href', 'click', true, ),
 	form: createLinkTag( 'form', 'action', 'submit', ),
 };
 
-function createLinkTag( name, linkName, eventName, ...moreArgs )
+function createLinkTag( name, linkName, eventName, isEmpty=false, ...moreArgs )
 {
 	return ( ...args )=> {
 		const vdom= create( name, ...args, ...moreArgs, );
@@ -145,7 +145,7 @@ function createLinkTag( name, linkName, eventName, ...moreArgs )
 					e.preventDefault();
 			} );
 		
-		return vdom;
+		return isEmpty? vdom : vdom.empty();
 	};
 }
 
