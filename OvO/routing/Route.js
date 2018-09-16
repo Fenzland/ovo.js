@@ -55,7 +55,7 @@ export default class Route
 		return params;
 	}
 	
-	makePath( param, )
+	buildPath( param, )
 	{
 		return this[PATTERN].replace( /\{(\w+)(?:\:(\w+))?\}/g, ( replaced, name, )=> param[name]||'', );
 	}
@@ -70,7 +70,7 @@ export default class Route
 	 */
 	buildLink( router, params, )
 	{
-		return new Link( router, this.makePath( params, ), );
+		return new Link( router, this.buildPath( params, ), );
 	}
 	
 	gatedBy( ...gates )
