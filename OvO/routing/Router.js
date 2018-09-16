@@ -50,7 +50,7 @@ export default class Router
 			let { path, page=name, title=name, gates=[], follows, }= typeof param ==='string'? { path:param, } : param;
 			
 			if( preName ) name= `${preName}.${name}`;
-			if( prePath ) path= uniformPath( `${prePath}${path}`, );
+			if( prePath ) path= uniformPath( `${prePath.replace( /\/$/, '', )}${path}`, );
 			if( prePage ) page= resolve( prePage, page, );
 			if( preGates ) gates.push( ...preGates, );
 			
