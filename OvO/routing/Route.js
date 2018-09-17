@@ -1,5 +1,4 @@
 import Link from './Link.js';
-import Gate from './Gate.js';
 
 const NAME= Symbol( 'name', );
 const TITLE= Symbol( 'title', );
@@ -75,10 +74,6 @@ export default class Route
 	
 	gatedBy( ...gates )
 	{
-		for( let gate of gates )
-			if(!( gate instanceof Gate ))
-				throw 'route must be gated by a gate.'
-		
 		this[GATES].push( ...gates, );
 		
 		return this;
