@@ -16,6 +16,10 @@ router.route( {
 			},
 		},
 	},
+	user: {
+		path: '/user',
+		gates: [ '/auth/gate', ],
+	},
 }, );
 
 export default router;
