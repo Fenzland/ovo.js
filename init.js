@@ -4,15 +4,16 @@ window.v= ( a, ...o )=> (console.log( a.valueOf?a.valueOf():a, ...o.map( x=> x.v
 window.timeout= ( time, value, )=> new Promise( ( resolve, reject, )=> setTimeout( ()=> resolve( value, ), time, ), );
 window.nextFrame= value=> new Promise( ( resolve, reject, )=> requestAnimationFrame( ()=> resolve( value, ), ), );
 
-Map.prototype.achieve= function( key, maker, ){
+Map.prototype.achieve= function( key, fallback, ){
 	if( this.has( key, ) )
 		return this.get( key, );
 	else
 	{
-		const value= maker();
+		if( fallback instanceof Function )
+			fallback= fallback();
 		
-		this.set( key, value, );
+		this.set( key, fallback, );
 		
-		return value;
+		return fallback;
 	}
 };
