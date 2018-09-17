@@ -1,5 +1,4 @@
 import Route from './Route.js';
-import Link from './Link.js';
 import History from './History.js';
 import View from '../view/View.js';
 import { resolve, traceBack, dirname, current, } from '../support/path.js';
