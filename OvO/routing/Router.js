@@ -104,7 +104,7 @@ export default class Router
 	 * 
 	 * @return Link
 	 */
-	linkTo( routeName, params, )
+	linkTo( routeName, params, attempt=undefined, )
 	{
 		if( routeName.startsWith( '.', ) )
 			routeName= this.resolve( this[CURRENT].name, routeName, );
@@ -114,7 +114,7 @@ export default class Router
 		if(!( route ))
 			throw `Route ${routeName} is not defiend.`;
 		
-		return route.buildLink( this, params, );
+		return route.buildLink( this, params, attempt, );
 	}
 	
 	resolve( base, name, )

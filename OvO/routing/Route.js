@@ -64,12 +64,13 @@ export default class Route
 	 * 
 	 * @param Router router
 	 * @param Object params
+	 * @param Function attempt
 	 * 
 	 * @return Link
 	 */
-	buildLink( router, params, )
+	buildLink( router, params, attempt=undefined, )
 	{
-		return new Link( router, this.buildPath( params, ), );
+		return new Link( router, this.buildPath( params, ), attempt, );
 	}
 	
 	gatedBy( ...gates )
