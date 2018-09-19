@@ -45,16 +45,6 @@ export default class History
 		return $( ( states, index, )=> states.map( state=> Object.assign( state, { offset: state.index - index, }, ), ), this[STATES], this[INDEX], );
 	}
 	
-	get past()
-	{
-		return this[STATES].slice( 0, this[INDEX], );
-	}
-	
-	get future()
-	{
-		return this[STATES].slice( this[INDEX] - - 1, Infinity, );
-	}
-	
 	get current()
 	{
 		return this.getState( 0, );
@@ -68,21 +58,6 @@ export default class History
 	goTo( state, )
 	{
 		this[WINDOW].history.go( state.index.valueOf() - this[INDEX], );
-	}
-	
-	find( route, offset=0, )
-	{
-		return this[STATES].find( ( state, index, )=> index>=offset && state.route===route, );
-	}
-	
-	findInPast( route, )
-	{
-		return this.past.reverse().find( state=> state.route===route, );
-	}
-	
-	findInFuture( route, )
-	{
-		return this.future.find( state=> state.route===route, );
 	}
 	
 	[INIT]( route, )
