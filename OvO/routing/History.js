@@ -1,4 +1,5 @@
 import session from '../support/session.js';
+import Model, { $, } from '../model/Model.js';
 
 const INIT= Symbol( 'init', );
 const WINDOW= Symbol( 'window', );
@@ -25,11 +26,11 @@ export default class History
 	
 	push( route, url, )
 	{
-		++this[INDEX];
+		this[INDEX].setValue( this[INDEX] - - 1, );
 		
-		const state= { index: this[INDEX], route, url, };
+		const state= { index: this[INDEX].valueOf(), route, url, };
 		
-		this[STATES].splice( this[INDEX], Infinity, state, );
+		this[STATES].splice( this[INDEX].valueOf(), Infinity, state, );
 		
 		this[WINDOW].history.pushState( state, '', url, );
 	}
@@ -56,7 +57,7 @@ export default class History
 	
 	moveTo( state, )
 	{
-		this[INDEX]= state.index;
+		this[INDEX].setValue( state.index, );
 	}
 	
 	goTo( state, )
@@ -87,16 +88,16 @@ export default class History
 			url: this[WINDOW].location.href,
 		};
 		
-		this[STATES]= [ state, ];
-		this[INDEX]= 0;
+		this[STATES]= new Model( [ state, ], );
+		this[INDEX]= new Model( 0, );
 		this[WINDOW].history.replaceState( state, '', state.url, );
 	}
 	
 	[STORE_SESSION]()
 	{
 		this[SESSION].set( 'history', {
-			states: this[STATES],
-			index: this[INDEX],
+			states: this[STATES].valueOf(),
+			index: this[INDEX].valueOf(),
 		}, );
 	}
 	
@@ -107,8 +108,8 @@ export default class History
 		if(!( stored && stored.states && stored.states.length ))
 			return false;
 		
-		this[STATES]= stored.states.concat();
-		this[INDEX]= stored.index;
+		this[STATES]= new Model( stored.states, );
+		this[INDEX]= new Model( stored.index, );
 		
 		return true;
 	}
