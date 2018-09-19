@@ -55,9 +55,14 @@ export default class History
 		this[INDEX].setValue( state.index.valueOf(), );
 	}
 	
+	go( offset, )
+	{
+		this[WINDOW].history.go( offset, );
+	}
+	
 	goTo( state, )
 	{
-		this[WINDOW].history.go( state.index.valueOf() - this[INDEX], );
+		this.go( state.index.valueOf() - this[INDEX], );
 	}
 	
 	[INIT]( route, )
