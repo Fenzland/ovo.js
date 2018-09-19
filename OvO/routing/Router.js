@@ -20,7 +20,7 @@ export default class Router
 		const baseOn= dirname( traceBack(), );
 		
 		this[BASE_PATH]= uniformPath( new URL( basePath, baseOn, ).pathname, );
-		this[PAGE_DIR]= resolve( baseOn, pageDIr, );
+		this[PAGE_DIR]= new URL( pageDIr, baseOn, ).href;
 		this[ROUTES]= new Map;
 	}
 	
@@ -195,6 +195,7 @@ export default class Router
 			}
 		}
 		
+		// 404
 		{
 			const route404= this[ROUTES].achieve(
 				'404',
