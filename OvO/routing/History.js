@@ -58,11 +58,33 @@ export default class History
 	go( offset, )
 	{
 		this[WINDOW].history.go( offset, );
+		
+		return true;
 	}
 	
 	goTo( state, )
 	{
-		this.go( state.index.valueOf() - this[INDEX], );
+		return this.go( state.index.valueOf() - this[INDEX], );
+	}
+	
+	backTo( route, )
+	{
+		const state= this[STATES].valueOf().slice( 0, this[INDEX].valueOf(), ).reverse().find( state=> state.route===route, );
+		
+		if( state )
+			return this.goTo( state, );
+		else
+			return false;
+	}
+	
+	aheadTo( route, )
+	{
+		const state= this[STATES].valueOf().slice( this[INDEX].valueOf() - - 1, Infinity, ).find( state=> state.route===route, );
+		
+		if( state )
+			return this.goTo( state, );
+		else
+			return false;
 	}
 	
 	[INIT]( route, )
