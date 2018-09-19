@@ -1,14 +1,16 @@
 const ROUTER= Symbol( 'router', );
 const URL_OBJ= Symbol( 'url_obj', );
+const ATTEMPT= Symbol( 'attempt', );
 
 export default class Link extends Function
 {
-	constructor( router, url, )
+	constructor( router, url, attempt=undefined, )
 	{
 		super();
 		
 		this[ROUTER]= router;
 		this[URL_OBJ]= new URL( url, window.location, );
+		this[ATTEMPT]= attempt;
 		
 		return new Proxy( this, {
 			apply( target, context, args, )
@@ -50,6 +52,11 @@ export default class Link extends Function
 	
 	active()
 	{
-		return this[ROUTER].goto( this, );
+		return (
+			(this[ATTEMPT] && this[ATTEMPT]())
+		||
+			this[ROUTER].goto( this, )
+		)
+		
 	}
 }
