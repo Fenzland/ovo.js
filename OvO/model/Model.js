@@ -12,6 +12,7 @@ const ORIGIN= Symbol( 'origin', );
 const OBJECT_VALUE= Symbol( 'object_value', );
 const LENGTH= Symbol( 'length', );
 const EMIT= Symbol( 'emit', );
+const RIPPLE= Symbol( 'ripple', );
 
 const rippling= new WeakMap();
 
@@ -203,6 +204,12 @@ export default class Model
 	[EMIT]( value, originValue, )
 	{
 		this[ORIGIN][OBSERVERS].forEach( listener=> listener( value, originValue, ), );
+		
+		this[RIPPLE]();
+	}
+	
+	[RIPPLE]()
+	{
 		this[ORIGIN][DEPENDENCIES].forEach( dependency=> rippling.has( dependency.model, ) || rippling.set( dependency.model, dependency.callback, ), );
 		this[ORIGIN][DEPENDENCIES].forEach( dependency=> {
 			if( rippling.has( dependency.model, ) )
@@ -522,6 +529,8 @@ export class ArrayModel extends Model
 	[EMIT]( index, model, removed=null, )
 	{
 		this[ORIGIN][OBSERVERS].forEach( listener=> listener( index, model, removed, ), );
+		
+		this[RIPPLE]();
 		
 		return model;
 	}
