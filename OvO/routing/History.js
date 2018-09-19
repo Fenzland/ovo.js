@@ -35,9 +35,14 @@ export default class History
 		this[WINDOW].history.pushState( state, '', url, );
 	}
 	
+	getState( offset=0, )
+	{
+		return $( ( states, index, )=> states[index - - offset], this[STATES], this[INDEX], );
+	}
+	
 	get states()
 	{
-		return this[STATES].concat();
+		return $( ( states, index, )=> states.map( state=> Object.assign( state, { offset: state.index - index, }, ), ), this[STATES], this[INDEX], );
 	}
 	
 	get past()
@@ -52,17 +57,17 @@ export default class History
 	
 	get current()
 	{
-		return this[STATES][this[INDEX]];
+		return this.getState( 0, );
 	}
 	
 	moveTo( state, )
 	{
-		this[INDEX].setValue( state.index, );
+		this[INDEX].setValue( state.index.valueOf(), );
 	}
 	
 	goTo( state, )
 	{
-		this[WINDOW].history.go( state.index - this[INDEX], );
+		this[WINDOW].history.go( state.index.valueOf() - this[INDEX], );
 	}
 	
 	find( route, offset=0, )
