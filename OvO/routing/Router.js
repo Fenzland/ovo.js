@@ -128,6 +128,16 @@ export default class Router
 			return name;
 	}
 	
+	backTo( routeName, params, )
+	{
+		return this.linkTo( routeName, params, ()=> this[HISTORY].backTo( routeName, ), );
+	}
+	
+	aheadTo( routeName, params, )
+	{
+		return this.linkTo( routeName, params, ()=> this[HISTORY].aheadTo( routeName, ), );
+	}
+	
 	/**
 	 * Goto another page.
 	 * 
