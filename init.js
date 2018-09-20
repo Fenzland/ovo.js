@@ -17,3 +17,31 @@ Map.prototype.achieve= function( key, fallback, ){
 		return fallback;
 	}
 };
+
+Array.prototype.replace= function( value, ...replacements ){
+	
+	const index= this.indexOf( value, );
+	
+	if( index >= 0 )
+	{
+		this.splice( index, 1, ...replacements, );
+		
+		return true;
+	}
+	else
+		return false;
+};
+
+Array.prototype.findAndReplace= function( predicate, ...replacements ){
+	
+	const index= this.findIndex( predicate, );
+	
+	if( index >= 0 )
+	{
+		this.splice( index, 1, ...replacements, );
+		
+		return true;
+	}
+	else
+		return false;
+};
