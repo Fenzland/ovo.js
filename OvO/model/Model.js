@@ -7,6 +7,7 @@ const VALUE= Symbol( 'value', );
 const OBSERVERS= Symbol( 'observers', );
 const INIT_OBSERVER= Symbol( 'init_observer', );
 const DEPENDENCIES= Symbol( 'dependencies', );
+const DEPENDENCES= Symbol( 'dependences', );
 const SET_VALUE= Symbol( 'set_value', );
 const ORIGIN= Symbol( 'origin', );
 const OBJECT_VALUE= Symbol( 'object_value', );
@@ -282,12 +283,14 @@ export default class Model
 			`expressionOf( ${models.map( x=> x instanceof Model ? x[NAME] : x, ).join( ', ', )}, )`,
 		);
 		
+		expression[DEPENDENCES]= models;
+		
 		models.forEach(
 			model=> (
 				model instanceof Model &&
 				model[DEPENDENCIES].push( {
 					model: expression,
-					callback: ()=> callback( ...models.map( x=> x instanceof Model? x.valueOf() : x, ), ),
+					callback: ()=> callback( ...expression[DEPENDENCES].map( x=> x instanceof Model? x.valueOf() : x, ), ),
 				}, )
 			),
 		);
