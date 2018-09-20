@@ -1,4 +1,4 @@
-import EnumerableObject, { map, } from '../support/EnumerableObject.js';
+import EnumerableObject, { map, forEach, } from '../support/EnumerableObject.js';
 
 const ID= Symbol( 'id', );
 const NAME= Symbol( 'name', );
@@ -306,6 +306,47 @@ export default class Model
 	static $( ...args )
 	{
 		return Model.express( ...args, );
+	}
+	
+	FREEZE()
+	{
+		this[OBSERVERS].length= 0;
+		this[DEPENDENCIES].forEach( dependency=> {
+			let not_free= false;
+			let replaced= false;
+			for( let i in dependency[DEPENDENCES] )
+			{
+				if( dependence===this )
+				{
+					dependency[DEPENDENCES][i]= this.valueOf();
+					replaced= true;
+				}
+				else
+				if( dependence instanceof Model )
+					not_free= true;
+				
+				if( replaced && not_free )
+					break;
+			}
+			
+			if(!( not_free ))
+				dependency.model.FREEZE();
+		}, );
+		this[DEPENDENCIES].length= 0;
+		
+		if( this[DEPENDENCES] )
+		{
+			this[DEPENDENCES].forEach( dependence=> dependence[DEPENDENCIES].findAndReplace( x=> x.model===this, ), );
+			this[DEPENDENCES].length= 0;
+		}
+		
+		if( this.IS_OBJECT )
+			forEach( this[CHILDREN], ( key, child, )=> child.FREEZE(), );
+		else
+		if( this instanceof ArrayModel )
+			this[CHILDREN].forEach( child=> child.FREEZE(), );
+		
+		this.setValue= ()=> {};
 	}
 }
 
