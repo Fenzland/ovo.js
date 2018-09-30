@@ -6,6 +6,7 @@ import $navs from './navs.widget.js';
 import $footer from './footer.widget.js';
 import { summary as $introduce, } from './introduce.js';
 import { summary as $model, } from './model.js';
+import { summary as $async, } from './async.js';
 import css_layout from '../layouts/home.css.js';
 
 export function render()
@@ -59,6 +60,16 @@ export function render()
 					a(
 						{ href:router.linkTo( 'model_demo', ), },
 						'Demo',
+					),
+				),
+			),
+			article(
+				h1( 'Async', ),
+				$async,
+				footer(
+					a(
+						{ href:router.linkTo( 'async', ), },
+						'>>> Read More',
 					),
 				),
 			),

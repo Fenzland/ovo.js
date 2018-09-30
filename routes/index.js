@@ -5,6 +5,7 @@ const router= new Router();
 router.route( {
 	home: { path: '/', page: 'index', },
 	introduce: '/introduce',
+	async: '/async',
 	model: '/model',
 	model_demo: {
 		path: '/model-demo',
