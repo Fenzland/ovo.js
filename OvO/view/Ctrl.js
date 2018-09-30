@@ -17,6 +17,9 @@ const ARRANGE_INDEXES= Symbol( 'arrange_indexes', );
 const ARRANGING_INDEXES= Symbol( 'arranging_indexes', );
 const DOCUMENT= Symbol( 'document', );
 const ROW_CACHE= Symbol( 'row_cache', );
+const PROMISE= Symbol( 'promise', );
+const PLACEHOLDER= Symbol( 'placeholder', );
+const REJECTED= Symbol( 'rejected', );
 
 export default class Ctrl
 {
@@ -264,4 +267,51 @@ class ForEachCtrl extends Ctrl
 export function ForEach( model, template, )
 {
 	return new ForEachCtrl( model, template, );
+}
+
+class AwaitCtrl extends Ctrl
+{
+	constructor( promise, placeholder=undefined, rejected=undefined, )
+	{
+		super();
+		
+		this[PROMISE]= promise;
+		this[PLACEHOLDER]= VDOM.create( '', placeholder || promise.temp || [], ).children;
+		this[REJECTED]= rejected || promise.rejected || (()=> []);
+	}
+	
+	toHTML()
+	{
+		return this[PLACEHOLDER].map( x=> x.toHTML(), ).join( '', );
+	}
+	
+	toDOM( document, )
+	{
+		const placeholder= this[PLACEHOLDER].map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
+		
+		this[PROMISE]
+			.then( vdoms=> {
+				const doms= VDOM.create( '', vdoms, ).children.map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
+				
+				placeholder[0].replaceWith( ...doms, )
+				
+				placeholder.slice( 1, ).forEach( x=> x.remove(), );
+			}, )
+			.catch( ()=> {
+				const rejected= this[REJECTED] instanceof Function? this[REJECTED]() : this[REJECTED];
+				const doms= VDOM.create( '', '', rejected, ).children.map( x=> x.toDOM( document, ), ).reduce( ( x, y, )=> x.concat( y, ), [], );
+				
+				placeholder[0].replaceWith( ...doms, )
+				
+				placeholder.slice( 1, ).forEach( x=> x.remove(), );
+			}, )
+		;
+		
+		return placeholder;
+	}
+}
+
+export function Await( promise, placeholder=undefined, rejected=undefined, )
+{
+	return new AwaitCtrl( promise, placeholder, rejected, );
 }
